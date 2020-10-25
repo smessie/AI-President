@@ -1,13 +1,14 @@
-import game.Deck as Deck
-import game.Player as Player
 import itertools
 import random
 from typing import List, Dict
 
+from game.deck import Deck
+from game.player import Player
+
 
 class President:
     def __init__(self, players: List[Player] = None):
-        self.deck = Deck.Deck()
+        self.deck = Deck()
         self.players: List[Player] = players if players else []
         self.players_in_trick: List[Player] = []
         self.winning_round_order: List[Player] = []
@@ -71,7 +72,7 @@ class President:
         president_gives_card = president.give_worst_card()
         loser_gives_card = None
         while loser_gives_card is None:
-            loser_gives_card = loser.give_specif_card(president.ask_preferred_card())
+            loser_gives_card = loser.give_specific_card(president.ask_preferred_card())
         president.add_card(loser_gives_card)
         loser.add_card(president_gives_card)
 

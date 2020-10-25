@@ -1,7 +1,6 @@
-from game.Deck import Deck
-from game.President import President
-from game.Card import Card
-from game.Card import Color
+from game.card import Card, Color
+from game.deck import Deck
+from game.president import President
 
 
 class Player:

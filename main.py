@@ -1,5 +1,5 @@
-import game.President as President
-import game.Player as Player
+import game.president as President
+import game.player as Player
 
 if __name__ == "__main__":
     game = President.President()

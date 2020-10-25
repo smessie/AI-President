@@ -1,7 +1,7 @@
 from random import shuffle
 from typing import List
 
-from game.Card import *
+from game.card import *
 from game.settings import *
 
 
