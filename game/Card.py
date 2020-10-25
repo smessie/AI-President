@@ -1,5 +1,4 @@
 import enum
-import random
 
 
 class Color(enum.Enum):
@@ -46,25 +45,14 @@ class Card:
 
     def __lt__(self, other):
         return self.value < other.value or (
-                    self.value == other.value and self.suit.get_color() < other.suit.get_color())
+                self.value == other.value and self.suit.get_color() < other.suit.get_color())
 
     def __le__(self, other):
         return self < other or self == other
 
     def __gt__(self, other):
         return self.value > other.value or (
-                    self.value == other.value and self.suit.get_color() > other.suit.get_color())
+                self.value == other.value and self.suit.get_color() > other.suit.get_color())
 
     def __ge__(self, other):
         return self > other or self == other
-
-
-def initial_deck_cards():
-    cards = []
-    values = [(3, "3"), (4, "4"), (5, "5"), (6, "6"), (7, "7"), (8, "8"), (9, "9"), (10, "10"), (11, "Jack"),
-              (12, "Queen"), (13, "King"), (14, "Ace"), (15, "2")]
-    for value in values:
-        for suit in Suit:
-            cards.append(Card(value[0], suit, suit.get_color() + " " + values[1] + " of " + suit))
-    random.shuffle(cards)
-    return cards

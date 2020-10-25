@@ -1,14 +1,26 @@
-from game.Card import initial_deck_cards
+from random import shuffle
+from typing import List
+
+from game.Card import *
+from game.settings import *
 
 
 class Deck:
+    """Just a collection of cards, with some functions to ease things. No game specific implementations."""
 
     def __init__(self):
-        self.card_stack = initial_deck_cards()
+        self.card_stack = []
         self.played_cards = []
         self.playing_per_amount = 1
 
-    def is_valid_play(self, cards):
+        # initialize the card stack
+        for symbol, value in CARD_VALUES:
+            for suit in Suit:
+                self.card_stack.append(Card(value, suit, suit.get_color() + " " + symbol + " of " + suit))
+        shuffle(self.card_stack)
+
+    # todo: this belongs in the President Class
+    def is_valid_play(self, cards: List[Card]):
         """"Check if the given card(s) can be played based on the current state of the game."""
 
         # Check that there are more or the same amount of cards played.

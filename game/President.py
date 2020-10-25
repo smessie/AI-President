@@ -2,22 +2,23 @@ import game.Deck as Deck
 import game.Player as Player
 import itertools
 import random
+from typing import List, Dict
 
 
 class President:
-    def __init__(self):
+    def __init__(self, players: List[Player] = None):
         self.deck = Deck.Deck()
-        self.players: [Player] = []
-        self.players_in_trick: [Player] = []
-        self.winning_round_order: [Player] = []
-        self.points = {}
+        self.players: List[Player] = players if players else []
+        self.players_in_trick: List[Player] = []
+        self.winning_round_order: List[Player] = []
+        self.points: Dict[Player, int] = {}
         self.trick_starter: Player = None
 
-    def add_player(self, player):
+    def add_player(self, player: Player):
         """"Add a new player to the game"""
         self.players.append(player)
 
-    def start_game(self, amount_of_rounds=5):
+    def start_game(self, amount_of_rounds: int = 5):
         """A series of rounds."""
         self.check_enough_players()
         self.setup_points()
