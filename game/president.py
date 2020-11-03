@@ -6,6 +6,7 @@ from tqdm import tqdm
 from game.agent import Agent
 from game.card import Card
 from game.table import Table
+from util.iterator import CustomIterator
 
 
 class President:
@@ -15,6 +16,7 @@ class President:
 
     def __init__(self, agents: List[Agent]):
         self.agents: List[Agent] = agents
+        self.agent_iterator: CustomIterator = CustomIterator(agents)
         self.table = Table(self)
 
     def play(self, games: int, rounds: int) -> None:
@@ -61,13 +63,13 @@ class President:
         Return the player order, this is an iterator so this allows for cleaner code in the President class.
         """
         # As long as there are 2 unfinished players
-        agent_iterator: Iterator[Agent] = cycle(self.agents)
         while [len(agent.player.hand) > 0 for agent in self.agents].count(True) >= 2:
-            agent: Agent = next(agent_iterator)
+            self.agent_iterator.next()
             nr_skips: int = 0
-            while nr_skips <= len(self.agents) and (len(agent.player.hand) == 0 or agent.player.passed):
-                agent = next(agent_iterator)
+            while nr_skips <= len(self.agents) and (
+                    len(self.agent_iterator.get().player.hand) == 0 or self.agent_iterator.get().player.passed):
+                self.agent_iterator.next()
                 nr_skips += 1
             if nr_skips > len(self.agents):
                 print('Infinite loop detected while looking for next player.')
-            yield agent
+            yield self.agent_iterator.get()
