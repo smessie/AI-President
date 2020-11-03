@@ -14,7 +14,7 @@ class Deck:
         self.playing_per_amount = 1
         self.reset_cards_stack()
 
-    def reset_cards_stack(self):
+    def reset_cards_stack(self) -> None:
         """
         Reset the card stack. Clear all cards and add a fresh (shuffled) set.
         """

@@ -1,4 +1,4 @@
-from typing import List, Iterator
+from typing import List, Iterator, Tuple
 
 from tqdm import tqdm
 
@@ -38,14 +38,14 @@ class President:
 
         progress.close()
 
-    def on_move(self, agent: Agent, cards: List[Card]) -> (int, bool):
+    def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[bool, int, bool]:
         """
         Handle move from Agent, We can be sure the agent can actually play the card.
-        return the reward and if the move is final.
+        return (valid_move, reward, is_final).
         """
-        return 0, False
+        return True, 0, False
 
-    def reset(self):
+    def reset(self) -> None:
         """
         - (Re)divide cards
         - reset the playing table

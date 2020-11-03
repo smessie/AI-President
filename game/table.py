@@ -43,7 +43,7 @@ class Table:
         return the reward and if the move is final.
         """
         # TODO: check if move is valid.
-        return self.game.on_move(agent, cards)
+        return self.game.on_move(agent, cards)[1:]
 
     def last_move(self) -> Optional[Tuple[List[Card], Agent]]:
         return self.played_cards[-1] if len(self.played_cards) > 0 else None
