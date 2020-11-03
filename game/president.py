@@ -1,4 +1,3 @@
-from itertools import cycle
 from typing import List, Iterator, Tuple
 
 from tqdm import tqdm
@@ -24,7 +23,7 @@ class President:
         Start the game. Play a certain amount of games each consisting of a certain amount of rounds.
         TODO return game results
         """
-        progress = tqdm(total=games*rounds)
+        progress = tqdm(total=games * rounds)
 
         for g in range(games):
             for r in range(rounds):
