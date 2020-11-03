@@ -60,4 +60,7 @@ class Table:
         return reward, final
 
     def last_move(self) -> Optional[Tuple[List[Card], Agent]]:
+        """
+        Get the last move
+        """
         return self.played_cards[-1] if len(self.played_cards) > 0 else None

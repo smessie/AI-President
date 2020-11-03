@@ -1,3 +1,4 @@
+from itertools import cycle
 from typing import List, Iterator, Tuple
 
 from tqdm import tqdm
@@ -59,4 +60,14 @@ class President:
         """
         Return the player order, this is an iterator so this allows for cleaner code in the President class.
         """
-        pass
+        # As long as there are 2 unfinished players
+        agent_iterator: Iterator[Agent] = cycle(self.agents)
+        while [len(agent.player.hand) > 0 for agent in self.agents].count(True) >= 2:
+            agent: Agent = next(agent_iterator)
+            nr_skips: int = 0
+            while nr_skips <= len(self.agents) and (len(agent.player.hand) == 0 or agent.player.passed):
+                agent = next(agent_iterator)
+                nr_skips += 1
+            if nr_skips > len(self.agents):
+                print('Infinite loop detected while looking for next player.')
+            yield agent

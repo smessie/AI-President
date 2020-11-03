@@ -1,15 +1,14 @@
-from typing import List
+from typing import List, Optional
 
 from game.card import Card
-from game.deck import Deck
-from game.president import President
 
 
 class Player:
-    _player_id = 0
+    _player_id: int = 0
 
     def __init__(self):
         self.hand: List[Card] = []
-        self.player_id = Player._player_id
-        self.position = None
+        self.passed: bool = False
+        self.player_id: int = Player._player_id
+        self.position: Optional[int] = None
         Player._player_id += 1
