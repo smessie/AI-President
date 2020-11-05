@@ -5,6 +5,12 @@ class Color(enum.Enum):
     Black = 1
     Red = 2
 
+    def __lt__(self, other):
+        return self.value < other.value
+
+    def __gt__(self, other):
+        return self.value > other.value
+
 
 class Suit(enum.Enum):
     Clubs = 1

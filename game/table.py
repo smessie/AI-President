@@ -34,7 +34,7 @@ class Table:
         self.discard_pile += self.played_cards
         self.played_cards.clear()
 
-    def make_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
+    def try_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
         """
         Take a move from an agent, execute the move on the table and give a reward to the agent.
         Validate if the move is valid first.
@@ -53,15 +53,13 @@ class Table:
             if not all(card in agent.player.hand for card in cards):
                 return -10, False
 
-        # At this point we know the card is valid, pass the move to the game logic.
-        valid, reward, final = self.game.on_move(agent, cards)
+        return self.game.on_move(agent, cards)
 
-        # The move is valid, the cards can be moved from the players hand to the table.
-        if valid:
+    def do_move(self, agent: Agent, cards: List[Card]) -> None:
+        # The move is valid, the cards can be moved from the players hand to the table. If the play was not a pass.
+        if cards:
             [agent.player.hand.remove(card) for card in cards]
             self.played_cards.append((cards, agent))
-
-        return reward, final
 
     def last_move(self) -> Optional[Tuple[List[Card], Agent]]:
         """

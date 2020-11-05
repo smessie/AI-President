@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Iterator, Tuple, TYPE_CHECKING
+from typing import List, Iterator, Tuple, Optional, TYPE_CHECKING
 
 from tqdm import tqdm
 
@@ -25,7 +25,6 @@ class President:
     def play(self, games: int, rounds: int) -> None:
         """
         Start the game. Play a certain amount of games each consisting of a certain amount of rounds.
-        TODO return game results
         """
         progress = tqdm(total=games * rounds)
 
@@ -44,12 +43,48 @@ class President:
 
         progress.close()
 
-    def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[bool, int, bool]:
+    def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
         """
         Handle move from Agent, We can be sure the agent can actually play the card.
         return (valid_move, reward, is_final).
         """
-        return True, 0, False
+        last_move: Tuple[List[Card], Agent] = self.table.last_move()
+
+        # If multiple cards are played the value should be the same and length at least the same.
+        if cards and (not all(cards[i].value == cards[0].value for i in range(len(cards))) or
+                      (last_move and len(cards) < len(last_move))):
+            return -10, False  # TODO fix reward
+
+        if not cards:
+            # A Pass, disable the player for this round
+            agent.player.passed = True
+            return -5, False  # TODO fix reward
+
+        # Check that each played card in the trick has the same rank, or if not, it is a 2.
+        played_value: Optional[int] = self._get_played_value(cards)
+        if not played_value or played_value < 0:
+            return -10, False
+        last_move_value: int = self._get_played_value(last_move[0]) if last_move else None
+
+        # Previous value should be lower
+        if not last_move or last_move_value <= played_value:
+            self.table.do_move(agent, cards)
+            return 10, False  # TODO fix reward
+        else:
+            return -10, False  # TODO fix reward
+
+    def _get_played_value(self, cards: List[Card]) -> Optional[int]:
+        """
+        Get the value of a stack off cards if they are all the same except for some 2s, -1 if not and None if only 2s
+        """
+        played_value: Optional[int] = None
+        for card in cards:
+            if card.value != 2:
+                if played_value and played_value != card.value:
+                    # Cards do not have the same rank
+                    return -1
+                played_value = card.value
+        return played_value
 
     def _reset(self) -> None:
         """

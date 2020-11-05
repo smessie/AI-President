@@ -1,11 +1,10 @@
-import game.president as President
-import game.player as Player
+from game.president import President
+from agents.simple_agent import SimpleAgent
 
 if __name__ == "__main__":
-    game = President.President()
+    game = President([
+        SimpleAgent() for _ in range(3)
+    ])
 
-    # Let players join the game
-    game.add_player(Player.Player(game))
-
-    # Start the game when we're done adding players
-    game.start_game(amount_of_rounds=1)
+    # Start the game
+    game.play(1000, 10)

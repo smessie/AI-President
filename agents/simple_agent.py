@@ -4,4 +4,4 @@ from game.table import Table
 
 class SimpleAgent(Agent):
     def make_move(self, table: Table) -> None:
-        table.make_move(self, [self.player.hand[0]])
+        table.try_move(self, [sorted(self.player.hand)[0]])
