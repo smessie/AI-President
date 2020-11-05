@@ -1,11 +1,15 @@
-from typing import List, Iterator, Tuple
+from __future__ import annotations
+
+from typing import List, Iterator, Tuple, TYPE_CHECKING
 
 from tqdm import tqdm
 
-from game.agent import Agent
-from game.card import Card
 from game.table import Table
 from util.iterator import CustomIterator
+
+if TYPE_CHECKING:
+    from game.agent import Agent
+    from game.card import Card
 
 
 class President:
@@ -28,14 +32,14 @@ class President:
         for g in range(games):
             for r in range(rounds):
                 # Update the progress bar
-                progress.set_description(f"Running round {r} of game {g}.")
+                progress.set_description(f"Running round {r} of game {g}")
                 progress.update()
 
                 # Reset from the previous round
-                self.reset()
+                self._reset()
 
                 # Play the round
-                for agent in self.get_play_order():
+                for agent in self._get_play_order():
                     agent.make_move(self.table)
 
         progress.close()
@@ -47,7 +51,7 @@ class President:
         """
         return True, 0, False
 
-    def reset(self) -> None:
+    def _reset(self) -> None:
         """
         - (Re)divide cards
         - reset the playing table
@@ -57,7 +61,7 @@ class President:
             self.agents[i].player.position = None
         self.table.reset()
 
-    def get_play_order(self) -> Iterator[Agent]:
+    def _get_play_order(self) -> Iterator[Agent]:
         """
         Return the player order, this is an iterator so this allows for cleaner code in the President class.
         """
@@ -71,4 +75,5 @@ class President:
                 nr_skips += 1
             if nr_skips > len(self.agents):
                 print('Infinite loop detected while looking for next player.')
+                return
             yield self.agent_iterator.get()

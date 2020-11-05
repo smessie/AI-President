@@ -1,8 +1,12 @@
-from typing import List
+from __future__ import annotations
 
-from game.card import Card
+from typing import List, TYPE_CHECKING
+
 from game.player import Player
-from game.table import Table
+
+if TYPE_CHECKING:
+    from game.card import Card
+    from game.table import Table
 
 
 class Agent:

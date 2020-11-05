@@ -1,9 +1,13 @@
-from typing import List, Tuple, Optional
+from __future__ import annotations
 
-from game.agent import Agent
-from game.card import Card
+from typing import List, Tuple, Optional, TYPE_CHECKING
+
 from game.deck import Deck
-from game.president import President
+
+if TYPE_CHECKING:
+    from game.agent import Agent
+    from game.card import Card
+    from game.president import President
 
 
 class Table:
@@ -50,7 +54,7 @@ class Table:
                 return -10, False
 
         # At this point we know the card is valid, pass the move to the game logic.
-        valid, reward, final = self.game.on_move(agent, cards)[1:]
+        valid, reward, final = self.game.on_move(agent, cards)
 
         # The move is valid, the cards can be moved from the players hand to the table.
         if valid:

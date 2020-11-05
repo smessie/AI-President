@@ -1,6 +1,9 @@
-from typing import List, Optional
+from __future__ import annotations
 
-from game.card import Card
+from typing import List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from game.card import Card
 
 
 class Player:
