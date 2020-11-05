@@ -37,6 +37,10 @@ class President:
                 # Reset from the previous round
                 self._reset()
 
+                # TODO If this is not the first round exchange cards
+                if r != 0:
+                    pass
+
                 # Play the round
                 for agent in self._get_play_order():
                     agent.make_move(self.table)
