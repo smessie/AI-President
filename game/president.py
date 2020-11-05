@@ -104,11 +104,21 @@ class President:
         while [len(agent.player.hand) > 0 for agent in self.agents].count(True) >= 2:
             self.agent_iterator.next()
             nr_skips: int = 0
+
             while nr_skips <= len(self.agents) and (
                     len(self.agent_iterator.get().player.hand) == 0 or self.agent_iterator.get().player.passed):
                 self.agent_iterator.next()
                 nr_skips += 1
+
             if nr_skips > len(self.agents):
-                print('Infinite loop detected while looking for next player.')
-                return
+                # All agents have no cards left
+                if all(len(agent.player.hand) == 0 for agent in self.agents):
+                    return
+                # Some player still has a card. Start a new trick
+                last_agent = self.table.last_move()[1]
+                self.table.new_trick()
+                while self.agent_iterator.get() != last_agent:
+                    self.agent_iterator.next()
+                self.agent_iterator.previous()
+
             yield self.agent_iterator.get()
