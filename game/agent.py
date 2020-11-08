@@ -10,8 +10,8 @@ if TYPE_CHECKING:
 
 
 class Agent:
-    def __init__(self):
-        self.player: Player = Player()
+    def __init__(self, player: Player):
+        self.player: Player = player
 
     def make_move(self, table: Table) -> None:
         """
