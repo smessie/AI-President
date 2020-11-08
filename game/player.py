@@ -11,7 +11,6 @@ class Player:
 
     def __init__(self):
         self.hand: List[Card] = []
-        self.passed: bool = False
         self.player_id: int = Player._player_id
         self.position: Optional[int] = None
         Player._player_id += 1

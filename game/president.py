@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Iterator, Tuple, Optional, TYPE_CHECKING
+from typing import List, Iterator, Tuple, Optional, Dict, TYPE_CHECKING
 
 from tqdm import tqdm
 
@@ -19,6 +19,9 @@ class President:
 
     def __init__(self, agents: List[Agent]):
         self.agents: List[Agent] = agents
+        self.passed_agents: Dict[Agent, bool] = {
+            agent: False for agent in self.agents
+        }
         self.agent_iterator: CustomIterator = CustomIterator(agents)
         self.table = Table(self)
 
@@ -61,7 +64,7 @@ class President:
 
         if not cards:
             # A Pass, disable the player for this round
-            agent.player.passed = True
+            self.passed_agents[agent] = True
             return -5, False  # TODO fix reward
 
         # Check that each played card in the trick has the same rank, or if not, it is a 2.
@@ -110,7 +113,7 @@ class President:
             nr_skips: int = 0
 
             while nr_skips <= len(self.agents) and (
-                    len(self.agent_iterator.get().player.hand) == 0 or self.agent_iterator.get().player.passed):
+                    len(self.agent_iterator.get().player.hand) == 0 or self.passed_agents[self.agent_iterator.get()]):
                 self.agent_iterator.next()
                 nr_skips += 1
 
@@ -120,9 +123,16 @@ class President:
                     return
                 # Some player still has a card. Start a new trick
                 last_agent = self.table.last_move()[1]
+
                 self.table.new_trick()
+                self.passed_agents = {
+                    agent: False for agent in self.agents
+                }
+
+                # The player that has made the last move can start in the new trick
                 while self.agent_iterator.get() != last_agent:
                     self.agent_iterator.next()
+                # We found the player, but the loop will call next, so we have to call previous to neutralize this.
                 self.agent_iterator.previous()
 
             yield self.agent_iterator.get()
