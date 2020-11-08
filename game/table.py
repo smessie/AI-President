@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from random import shuffle
 from typing import List, Tuple, Optional, TYPE_CHECKING
 
 from game.deck import Deck
@@ -66,3 +67,13 @@ class Table:
         Get the last move
         """
         return self.played_cards[-1] if len(self.played_cards) > 0 else None
+
+    def divide(self, nr_players: int) -> List[List[Card]]:
+        """
+        Shuffle and Divide all cards in as there are players, indicated by nr_players
+        """
+        shuffle(self.deck.card_stack)
+        result = [[] for _ in range(nr_players)]
+        for i in range(len(self.deck.card_stack)):
+            result[i % nr_players].append(self.deck.card_stack[i])
+        return result

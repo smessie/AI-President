@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 from game.table import Table
 from util.iterator import CustomIterator
+from util.cards import get_played_value
 
 if TYPE_CHECKING:
     from game.agent import Agent
@@ -76,26 +77,13 @@ class President:
             return False
 
         # Check that each played card in the trick has the same rank, or if not, it is a 2.
-        played_value: Optional[int] = self._get_played_value(cards)
+        played_value: Optional[int] = get_played_value(cards)
         if not played_value or played_value < 0:
             return False
-        last_move_value: int = self._get_played_value(last_move[0]) if last_move else None
+        last_move_value: int = get_played_value(last_move[0]) if last_move else None
 
         # Previous value should be lower
         return not last_move or last_move_value <= played_value
-
-    def _get_played_value(self, cards: List[Card]) -> Optional[int]:
-        """
-        Get the value of a stack off cards if they are all the same except for some 2s, -1 if not and None if only 2s
-        """
-        played_value: Optional[int] = None
-        for card in cards:
-            if card.value != 2:
-                if played_value and played_value != card.value:
-                    # Cards do not have the same rank
-                    return -1
-                played_value = card.value
-        return played_value
 
     def _reset(self) -> None:
         """
