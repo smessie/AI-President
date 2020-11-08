@@ -53,7 +53,7 @@ class President:
     def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
         """
         Handle move from Agent, We can be sure the agent can actually play the card.
-        return (valid_move, reward, is_final).
+        return (reward, is_final).
         """
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
