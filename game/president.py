@@ -55,30 +55,34 @@ class President:
         Handle move from Agent, We can be sure the agent can actually play the card.
         return (reward, is_final).
         """
-        last_move: Tuple[List[Card], Agent] = self.table.last_move()
-
-        # If multiple cards are played the value should be the same and length at least the same.
-        if cards and (not all(cards[i].value == cards[0].value for i in range(len(cards))) or
-                      (last_move and len(cards) < len(last_move))):
-            return -10, False  # TODO fix reward
-
         if not cards:
             # A Pass, disable the player for this round
             self.passed_agents[agent] = True
             return -5, False  # TODO fix reward
 
-        # Check that each played card in the trick has the same rank, or if not, it is a 2.
-        played_value: Optional[int] = self._get_played_value(cards)
-        if not played_value or played_value < 0:
-            return -10, False
-        last_move_value: int = self._get_played_value(last_move[0]) if last_move else None
-
         # Previous value should be lower
-        if not last_move or last_move_value <= played_value:
+        if self._valid_move(cards):
             self.table.do_move(agent, cards)
             return 10, False  # TODO fix reward
         else:
             return -10, False  # TODO fix reward
+
+    def _valid_move(self, cards: List[Card]) -> bool:
+        last_move: Tuple[List[Card], Agent] = self.table.last_move()
+
+        # If multiple cards are played the value should be the same and length at least the same.
+        if cards and (not all(cards[i].value == cards[0].value for i in range(len(cards))) or
+                      (last_move and len(cards) < len(last_move))):
+            return False
+
+        # Check that each played card in the trick has the same rank, or if not, it is a 2.
+        played_value: Optional[int] = self._get_played_value(cards)
+        if not played_value or played_value < 0:
+            return False
+        last_move_value: int = self._get_played_value(last_move[0]) if last_move else None
+
+        # Previous value should be lower
+        return not last_move or last_move_value <= played_value
 
     def _get_played_value(self, cards: List[Card]) -> Optional[int]:
         """
