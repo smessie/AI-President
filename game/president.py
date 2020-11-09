@@ -68,13 +68,13 @@ class President:
             return -5, False  # TODO fix reward
 
         # Previous value should be lower
-        if self._valid_move(cards):
+        if self.valid_move(cards):
             self.table.do_move(agent, cards)
             return 10, False  # TODO fix reward
         else:
             return -10, False  # TODO fix reward
 
-    def _valid_move(self, cards: List[Card]) -> bool:
+    def valid_move(self, cards: List[Card]) -> bool:
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
         # If multiple cards are played length should be at least the same.
