@@ -5,8 +5,8 @@ from typing import List, Iterator, Tuple, Optional, Dict, TYPE_CHECKING
 from tqdm import tqdm
 
 from game.table import Table
-from util.iterator import CustomIterator
 from util.cards import get_played_value
+from util.iterator import CustomIterator
 
 if TYPE_CHECKING:
     from game.agent import Agent
@@ -23,6 +23,7 @@ class President:
         self.passed_agents: Dict[Agent, bool] = {
             agent: False for agent in self.agents
         }
+        self.agent_finish_order: List[Agent] = []
         self.agent_iterator: CustomIterator = CustomIterator(agents)
         self.table = Table(self)
 
@@ -41,13 +42,18 @@ class President:
                 # Reset from the previous round
                 self._reset()
 
-                # TODO If this is not the first round exchange cards
+                # If this is not the first round exchange cards
                 if r != 0:
-                    pass
+                    self._exchange_cards()
+                self.agent_finish_order = []
 
                 # Play the round
                 for agent in self._get_play_order():
                     agent.make_move(self.table)
+
+                    # If the player finished this round award it by giving it its position.
+                    if len(agent.player.hand) == 0:
+                        self.agent_finish_order.append(agent)
 
         progress.close()
 
@@ -87,12 +93,32 @@ class President:
     def _reset(self) -> None:
         """
         - (Re)divide cards
+        - reset the finish order
         - reset the playing table
         """
-        for i, hand in enumerate(self.table.deck.divide(len(self.agents))):
+        for i, hand in enumerate(self.table.divide(len(self.agents))):
             self.agents[i].player.hand = hand
-            self.agents[i].player.position = None
         self.table.reset()
+
+    def _exchange_cards(self) -> None:
+        # Todo discuss this, but for now only the first and last player trade cards
+        first: Agent = self.agent_finish_order[0]
+        last: Agent = self.agent_finish_order[-1]
+        preferred_cards: List[Card] = first.get_preferred_card_order(self.table)
+
+        # Hand best card from loser to winner
+        card_index = 0
+        while preferred_cards[card_index] not in last.player.hand:
+            card_index += 1
+
+        exchange_card: Card = last.player.hand[card_index]
+        first.player.hand.append(exchange_card)
+        last.player.hand.remove(exchange_card)
+
+        # Hand lowest card from winner to loser
+        exchange_card = sorted(first.player.hand)[0]
+        first.player.hand.remove(exchange_card)
+        last.player.hand.append(exchange_card)
 
     def _get_play_order(self) -> Iterator[Agent]:
         """
@@ -127,3 +153,5 @@ class President:
                 self.agent_iterator.previous()
 
             yield self.agent_iterator.get()
+        # The unfinished player comes last, add it to the last_played lis
+        self.agent_finish_order.append(list(filter(lambda x: len(x.player.hand) > 0, self.agents))[0])
