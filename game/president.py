@@ -71,9 +71,8 @@ class President:
     def _valid_move(self, cards: List[Card]) -> bool:
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
-        # If multiple cards are played the value should be the same and length at least the same.
-        if cards and (not all(cards[i].value == cards[0].value for i in range(len(cards))) or
-                      (last_move and len(cards) < len(last_move))):
+        # If multiple cards are played length should be at least the same.
+        if cards and last_move and len(cards) < len(last_move[0]):
             return False
 
         # Check that each played card in the trick has the same rank, or if not, it is a 2.
