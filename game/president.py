@@ -1,114 +1,157 @@
-import itertools
-import random
-from typing import List, Dict
+from __future__ import annotations
 
-from game.deck import Deck
-from game.player import Player
+from typing import List, Iterator, Tuple, Optional, Dict, TYPE_CHECKING
+
+from tqdm import tqdm
+
+from game.table import Table
+from util.cards import get_played_value
+from util.iterator import CustomIterator
+
+if TYPE_CHECKING:
+    from game.agent import Agent
+    from game.card import Card
 
 
 class President:
-    def __init__(self, players: List[Player] = None):
-        self.deck = Deck()
-        self.players: List[Player] = players if players else []
-        self.players_in_trick: List[Player] = []
-        self.winning_round_order: List[Player] = []
-        self.points: Dict[Player, int] = {}
-        self.trick_starter: Player = None
+    """
+    A class containing the game logic.
+    """
 
-    def add_player(self, player: Player):
-        """"Add a new player to the game"""
-        self.players.append(player)
+    def __init__(self, agents: List[Agent]):
+        self.agents: List[Agent] = agents
+        self.passed_agents: Dict[Agent, bool] = {
+            agent: False for agent in self.agents
+        }
+        self.agent_finish_order: List[Agent] = []
+        self.agent_iterator: CustomIterator = CustomIterator(agents)
+        self.table = Table(self)
 
-    def start_game(self, amount_of_rounds: int = 5):
-        """A series of rounds."""
-        self.check_enough_players()
-        self.setup_points()
-        for _ in range(amount_of_rounds):
-            self.divide_cards()
-            self.start_new_round()
-            self.collect_remaining_cards()
+    def play(self, games: int, rounds: int) -> None:
+        """
+        Start the game. Play a certain amount of games each consisting of a certain amount of rounds.
+        """
+        progress = tqdm(total=games * rounds)
 
-    def start_new_round(self):
-        """Each round ends with a winner, the President"""
-        self.exchange_cards_presidents_losers()
-        self.trick_starter = self.winning_round_order[0] if self.winning_round_order else self.players[0]
-        self.winning_round_order.clear()
-        while len(self.winning_round_order) + 1 < len(self.players):
-            self.start_new_trick()
-        self.assign_points()
+        for g in range(games):
+            for r in range(rounds):
+                # Update the progress bar
+                progress.set_description(f"Running round {r} of game {g}")
+                progress.update()
 
-    def start_new_trick(self):
-        """A new trick starts with a clear deck and the player who played the highest cards in the previous trick may
-        come out. A trick ends when everyone except 1 has passed."""
-        # New trick, so add all players to it
-        self.players_in_trick = [player for player in self.players if player not in self.winning_round_order]
+                # Reset from the previous round
+                self._reset()
 
-        players_iterator = itertools.cycle(self.players)
+                # If this is not the first round exchange cards
+                if r != 0:
+                    self._exchange_cards()
+                self.agent_finish_order = []
 
-        # Make sure the right player has to start
-        for _ in range(self.players_in_trick.index(self.trick_starter)):
-            next(players_iterator)
+                # Play the round
+                for agent in self._get_play_order():
+                    agent.make_move(self.table)
 
-        while len(self.players_in_trick) >= 1:
-            player = next(players_iterator)
-            if player in self.players_in_trick:
-                move = player.move(self.deck)
-                if len(move) == 0:
-                    # Player passed
-                    self.players_in_trick.remove(player)
-                elif not self.deck.is_valid_play(move):
-                    # Player did invalid play
-                    # Currently an assert, if changed later, make sure his cards aren't lost.
-                    assert "Invalid play submitted by player."
-                # Handle valid player move
-                self.deck.played_cards.extend(move)
-        self.deck.card_stack.extend(self.deck.played_cards)
+                    # If the player finished this round award it by giving it its position.
+                    if len(agent.player.hand) == 0:
+                        self.agent_finish_order.append(agent)
 
-    def exchange_cards_presidents_losers(self):
-        if len(self.winning_round_order) == 0:
-            return
-        president = self.winning_round_order[0]
-        loser = self.winning_round_order[-1]
-        president_gives_card = president.give_worst_card()
-        loser_gives_card = None
-        while loser_gives_card is None:
-            loser_gives_card = loser.give_specific_card(president.ask_preferred_card())
-        president.add_card(loser_gives_card)
-        loser.add_card(president_gives_card)
+        progress.close()
 
-    def check_enough_players(self):
-        assert len(self.players) >= 3, "Not enough players to start a game."
+    def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
+        """
+        Handle move from Agent, We can be sure the agent can actually play the card.
+        return (reward, is_final).
+        """
+        if not cards:
+            # A Pass, disable the player for this round
+            self.passed_agents[agent] = True
+            return -5, False  # TODO fix reward
 
-    def divide_cards(self):
-        assert len(self.deck.card_stack) == 52, "Incomplete card stack."
-        random.shuffle(self.deck.card_stack)
-        players_iterator = itertools.cycle(self.players)
-        while self.deck.card_stack:
-            card = self.deck.card_stack.pop()
-            next(players_iterator).add_card(card)
+        # Previous value should be lower
+        if self._valid_move(cards):
+            self.table.do_move(agent, cards)
+            return 10, False  # TODO fix reward
+        else:
+            return -10, False  # TODO fix reward
 
-    def check_players_finished(self):
-        for player in self.players:
-            if player not in self.winning_round_order and not player.cards_in_hand:
-                self.winning_round_order.append(player)
-                if player in self.players_in_trick:
-                    self.players_in_trick.remove(player)
+    def _valid_move(self, cards: List[Card]) -> bool:
+        last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
-    def collect_remaining_cards(self):
-        for player in self.players:
-            self.deck.card_stack.extend(player.cards_in_hand)
-            player.cards_in_hand.clear()
-        self.deck.card_stack.extend(self.deck.played_cards)
-        self.deck.played_cards.clear()
+        # If multiple cards are played length should be at least the same.
+        if cards and last_move and len(cards) < len(last_move[0]):
+            return False
 
-    def setup_points(self):
-        for player in self.players:
-            self.points[player] = 0
+        # Check that each played card in the trick has the same rank, or if not, it is a 2.
+        played_value: Optional[int] = get_played_value(cards)
+        if not played_value or played_value < 0:
+            return False
+        last_move_value: int = get_played_value(last_move[0]) if last_move else None
 
-    def assign_points(self):
-        """Assign points based on the position in the winning_round_order list. To be adjusted."""
-        self.points[self.winning_round_order[0]] += 2
-        bonus = round((len(self.winning_round_order) / 2) / 10, 1)
-        for i in range(1, len(self.winning_round_order)):
-            self.points[self.winning_round_order[i]] += bonus
-            bonus -= 0.1
+        # Previous value should be lower
+        return not last_move or last_move_value <= played_value
+
+    def _reset(self) -> None:
+        """
+        - (Re)divide cards
+        - reset the finish order
+        - reset the playing table
+        """
+        for i, hand in enumerate(self.table.divide(len(self.agents))):
+            self.agents[i].player.hand = hand
+        self.table.reset()
+
+    def _exchange_cards(self) -> None:
+        # Todo discuss this, but for now only the first and last player trade cards
+        first: Agent = self.agent_finish_order[0]
+        last: Agent = self.agent_finish_order[-1]
+        preferred_cards: List[Card] = first.get_preferred_card_order(self.table)
+
+        # Hand best card from loser to winner
+        card_index = 0
+        while preferred_cards[card_index] not in last.player.hand:
+            card_index += 1
+
+        exchange_card: Card = last.player.hand[card_index]
+        first.player.hand.append(exchange_card)
+        last.player.hand.remove(exchange_card)
+
+        # Hand lowest card from winner to loser
+        exchange_card = sorted(first.player.hand)[0]
+        first.player.hand.remove(exchange_card)
+        last.player.hand.append(exchange_card)
+
+    def _get_play_order(self) -> Iterator[Agent]:
+        """
+        Return the player order, this is an iterator so this allows for cleaner code in the President class.
+        """
+        # As long as there are 2 unfinished players
+        while [len(agent.player.hand) > 0 for agent in self.agents].count(True) >= 2:
+            self.agent_iterator.next()
+            nr_skips: int = 0
+
+            while nr_skips <= len(self.agents) and (
+                    len(self.agent_iterator.get().player.hand) == 0 or self.passed_agents[self.agent_iterator.get()]):
+                self.agent_iterator.next()
+                nr_skips += 1
+
+            if nr_skips > len(self.agents):
+                # All agents have no cards left
+                if all(len(agent.player.hand) == 0 for agent in self.agents):
+                    return
+                # Some player still has a card. Start a new trick
+                last_agent = self.table.last_move()[1]
+
+                self.table.new_trick()
+                self.passed_agents = {
+                    agent: False for agent in self.agents
+                }
+
+                # The player that has made the last move can start in the new trick
+                while self.agent_iterator.get() != last_agent:
+                    self.agent_iterator.next()
+                # We found the player, but the loop will call next, so we have to call previous to neutralize this.
+                self.agent_iterator.previous()
+
+            yield self.agent_iterator.get()
+        # The unfinished player comes last, add it to the last_played lis
+        self.agent_finish_order.append(list(filter(lambda x: len(x.player.hand) > 0, self.agents))[0])
