@@ -20,12 +20,8 @@ class Agent:
         """
         pass
 
-    def receive_event(self, move, event) -> None:
-        pass
-
     def get_preferred_card_order(self, table: Table) -> List[Card]:
         """
         Function used by President to exchange cards at the beginning of a round. Most wanted card should be in front.
-
         """
         return sorted(table.deck.card_stack, reverse=True)
