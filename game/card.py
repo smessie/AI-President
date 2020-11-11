@@ -62,3 +62,9 @@ class Card:
 
     def __ge__(self, other):
         return self > other or self == other
+
+    def __hash__(self):
+        return hash(self.suit.get_color()) + hash(self.value)
+
+    def __repr__(self):
+        return self.name

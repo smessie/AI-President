@@ -139,7 +139,8 @@ class President:
                 if all(len(agent.player.hand) == 0 for agent in self.agents):
                     return
                 # Some player still has a card. Start a new trick
-                last_agent = self.table.last_move()[1]
+                # The check is needed for if a player makes an invalid move
+                last_agent = self.table.last_move()[1] if self.table.last_move() else self.agent_iterator.get()
 
                 self.table.new_trick()
                 self.passed_agents = {
@@ -151,6 +152,7 @@ class President:
                     self.agent_iterator.next()
                 # We found the player, but the loop will call next, so we have to call previous to neutralize this.
                 self.agent_iterator.previous()
+                continue
 
             yield self.agent_iterator.get()
         # The unfinished player comes last, add it to the last_played lis
