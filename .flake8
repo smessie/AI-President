@@ -1,0 +1,14 @@
+[flake8]
+ignore = D203
+exclude = .
+    # No need to traverse our git directory
+    .git,
+    # There's no value in checking cache directories
+    __pycache__,
+    # This contains our virtual environments that we don't want to check
+    project,
+    venv,
+    # This also contains libraries that we don't want to check
+    venvanaconda,
+max-complexity = 10
+max-line-length = 120

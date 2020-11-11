@@ -50,15 +50,15 @@ class Card:
         return not self == other
 
     def __lt__(self, other):
-        return self.value < other.value or (
-                self.value == other.value and self.suit.get_color() < other.suit.get_color())
+        return self.value < other.value or \
+            (self.value == other.value and self.suit.get_color() < other.suit.get_color())
 
     def __le__(self, other):
         return self < other or self == other
 
     def __gt__(self, other):
-        return self.value > other.value or (
-                self.value == other.value and self.suit.get_color() > other.suit.get_color())
+        return self.value > other.value or \
+            (self.value == other.value and self.suit.get_color() > other.suit.get_color())
 
     def __ge__(self, other):
         return self > other or self == other
