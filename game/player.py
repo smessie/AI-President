@@ -17,7 +17,7 @@ class Player:
         Player._player_id += 1
 
     def get_all_possible_moves(self, table: Table) -> List[List[Card]]:
-        possible_moves = [[]]
+        possible_moves = [[]] if table.played_cards else []
         for amount_of_cards in range(len(table.last_move()[0]) if table.last_move() else 1, len(self.hand) + 1):
             for potential_move in combinations(self.hand, amount_of_cards):
                 if table.game.valid_move(list(potential_move)):
