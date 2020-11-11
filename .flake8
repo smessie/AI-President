@@ -10,3 +10,4 @@ exclude = .
     # This also contains libraries that we don't want to check
     venvanaconda,
 max-complexity = 10
+max-line-length = 127
