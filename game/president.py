@@ -152,6 +152,7 @@ class President:
                     self.agent_iterator.next()
                 # We found the player, but the loop will call next, so we have to call previous to neutralize this.
                 self.agent_iterator.previous()
+                continue
 
             yield self.agent_iterator.get()
         # The unfinished player comes last, add it to the last_played lis
