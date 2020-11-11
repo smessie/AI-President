@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import List, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional
 
 from game.agent import Agent
-from util.cards import get_played_value
-from game.table import Table
 from game.player import Player
+from game.table import Table
+from util.cards import get_played_value
 
 if TYPE_CHECKING:
     from game.card import Card

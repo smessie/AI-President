@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Iterator, Tuple, Optional, Dict, TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple
 
 from tqdm import tqdm
 

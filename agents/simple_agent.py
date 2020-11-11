@@ -1,6 +1,6 @@
 from game.agent import Agent
-from game.table import Table
 from game.player import Player
+from game.table import Table
 
 
 class SimpleAgent(Agent):

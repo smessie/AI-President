@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import random
-from typing import List, TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from game.agent import Agent
-from game.table import Table
 from game.player import Player
+from game.table import Table
 
 if TYPE_CHECKING:
     from game.card import Card

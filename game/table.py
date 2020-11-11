@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from random import shuffle
-from typing import List, Tuple, Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from game.deck import Deck
 
