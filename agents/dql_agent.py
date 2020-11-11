@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from itertools import chain
 from typing import TYPE_CHECKING, List
 
 from ai.model import PresidentModel
@@ -19,12 +20,12 @@ class DQLAgent(Agent):
 
     def make_move(self, table: Table) -> None:
         """
-        TODO: Agent makes a move based on the fact that the hand played has the lowest possible value.
+        Agent makes a move by using Deep Q-Learning.
         """
         cards_in_hand_vector: List[int] = map_cards_to_vector(self.player.hand)
         cards_previous_move_vector: List[int] = map_cards_to_vector(table.last_move()[0] if table.last_move() else [])
         all_played_cards_vector: List[int] = map_cards_to_vector(
-            [y for ys in table.played_cards for y in map(lambda x: x[0], ys)])  # TODO flatmap and add discard_pile
+            list(chain.from_iterable([*map(lambda x: x[0], table.played_cards), *table.discard_pile])))
 
         calculated_move: List[int] = self.model.calculate_next_move(
             cards_in_hand_vector, cards_previous_move_vector, all_played_cards_vector)
