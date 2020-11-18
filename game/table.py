@@ -32,7 +32,7 @@ class Table:
         """
         Move the cards from the played_cards to the discard_pile.
         """
-        self.discard_pile += self.played_cards
+        self.discard_pile += map(lambda x: x[0], self.played_cards)
         self.played_cards.clear()
 
     def try_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:

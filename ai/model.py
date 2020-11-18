@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Tuple
 
 import tensorflow as tf
+import numpy as np
 
 
 class PresidentModel:
@@ -19,6 +20,14 @@ class PresidentModel:
             metrics=[tf.keras.metrics.MeanSquaredError()],
         )
 
-    def calculate_next_move(self, cards_in_hand_vector, cards_previous_move_vector, all_played_cards_vector):
-        pass
+    def calculate_next_move(self, cards_in_hand_vector, cards_previous_move_vector, all_played_cards_vector) -> List[float]:
+        input_data = np.array(cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector)[np.newaxis, :]
+        prediction = self._model.predict(input_data)
+        return prediction[0].tolist()
 
+    def train_model(self, data: List[Tuple[List[int], List[float], int]]):
+        input_data: List[List[int]] = [*map(lambda x: x[0], data)]
+        output_data: List[List[int]] = [*map(lambda x: x[1], data)]
+        # TODO: how to pass reward to network?
+        self._model.fit(x=input_data, y=output_data, batch_size=len(input_data), epochs=10, verbose=0)
+        pass

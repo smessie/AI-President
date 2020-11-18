@@ -55,6 +55,9 @@ class President:
                     if len(agent.player.hand) == 0:
                         self.agent_finish_order.append(agent)
 
+                for agent in self.agents:
+                    agent.game_end_callback(self.agent_finish_order, self.table)
+
         progress.close()
 
     def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
