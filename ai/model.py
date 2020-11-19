@@ -11,7 +11,7 @@ class PresidentModel:
         self._model = tf.keras.models.Sequential([
             tf.keras.layers.Dense(units=hidden_layers[0], activation='relu', input_dim=13 * 3),
             *(tf.keras.layers.Dense(units=units, activation='relu') for units in hidden_layers[1:]),
-            tf.keras.layers.Dense(units=13, activation='softmax'),  # TODO geen activation
+            tf.keras.layers.Dense(units=13),
         ])
         self._model.summary()
         self._model.compile(
