@@ -48,11 +48,8 @@ class Table:
 
         return the reward and if the move is final.
         """
-        # A pass is a valid move.
-        if len(cards) != 0:
-            # WARNING: when playing with 2 decks of cards this is not sufficient.
-            if not all(card in agent.player.hand for card in cards):
-                return -10, False
+        #print(cards, agent.player.player_id)
+
 
         return self.game.on_move(agent, cards)
 

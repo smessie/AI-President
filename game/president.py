@@ -36,7 +36,9 @@ class President:
         for g in range(games):
             for r in range(rounds):
                 # Update the progress bar
-                progress.set_description(f"Running round {r} of game {g}")
+                progress.set_description(
+                    f"Running round {r} of game {g}. "
+                    f"Last winner: {self.agent_finish_order[0].player.player_id if self.agent_finish_order else None}")
                 progress.update()
 
                 # Reset from the previous round
@@ -68,25 +70,42 @@ class President:
         if not cards:
             # A Pass, disable the player for this round
             self.passed_agents[agent] = True
+            #print('Player passed')
             return -5, False  # TODO fix reward
 
+        # A pass is a valid move.
+        if len(cards) != 0:
+            # WARNING: when playing with 2 decks of cards this is not sufficient.
+            if not all(card in agent.player.hand for card in cards):
+                self.passed_agents[agent] = True
+                #print('Player can\'t make move')
+                return -10, False
+
         # Previous value should be lower
-        if self.valid_move(cards):
+        if self.valid_move(cards, debug=False):
+            #print('OK')
             self.table.do_move(agent, cards)
             return 10, False  # TODO fix reward
         else:
+            self.passed_agents[agent] = True
             return -10, False  # TODO fix reward
 
-    def valid_move(self, cards: List[Card]) -> bool:
+    def valid_move(self, cards: List[Card], debug=False) -> bool:
+
+
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
         # If multiple cards are played length should be at least the same.
         if cards and last_move and len(cards) < len(last_move[0]):
+            if debug:
+                print('Not enough cards')
             return False
 
         # Check that each played card in the trick has the same rank, or if not, it is a 2.
         played_value: Optional[int] = get_played_value(cards)
         if not played_value or played_value < 0:
+            if debug:
+                print('value too low')
             return False
         last_move_value: int = get_played_value(last_move[0]) if last_move else None
 

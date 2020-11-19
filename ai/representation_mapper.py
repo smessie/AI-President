@@ -35,3 +35,15 @@ def map_vector_to_cards(vector: List[int], hand: List[Card]) -> Optional[List[Ca
             else:
                 return None
     return cards
+
+
+def map_action_to_cards(action: int, hand: List[Card]) -> Optional[List[Card]]:
+    if action == 240:
+        return []
+    assert 0 <= action <= 239, 'action should be between 0 and 239'
+
+    amount_of_twos: int = action // 48
+    amount_of_specific_cards: int = ((action % 48) // 12) + 1
+    card_value: int = action % 12
+    vector = [0 if i != card_value else amount_of_specific_cards for i in range(12)] + [amount_of_twos]
+    return map_vector_to_cards(vector, hand)
