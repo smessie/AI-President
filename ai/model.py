@@ -1,7 +1,7 @@
 from typing import List, Tuple
 
-import tensorflow as tf
 import numpy as np
+import tensorflow as tf
 
 
 class PresidentModel:
@@ -20,8 +20,10 @@ class PresidentModel:
             metrics=[tf.keras.metrics.MeanSquaredError()],
         )
 
-    def calculate_next_move(self, cards_in_hand_vector, cards_previous_move_vector, all_played_cards_vector) -> List[float]:
-        input_data = np.array(cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector)[np.newaxis, :]
+    def calculate_next_move(self, cards_in_hand_vector, cards_previous_move_vector, all_played_cards_vector)\
+            -> List[float]:
+        input_data = \
+            np.array(cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector)[np.newaxis, :]
         prediction = self._model.predict(input_data)
         return prediction[0].tolist()
 

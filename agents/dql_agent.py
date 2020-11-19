@@ -1,10 +1,7 @@
 from __future__ import annotations
 
 from itertools import chain
-from typing import TYPE_CHECKING, List, Tuple, Optional, Any
-
-import numpy as np
-import tensorflow as tf
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 from ai.model import PresidentModel
 from ai.representation_mapper import map_cards_to_vector, map_vector_to_cards
