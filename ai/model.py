@@ -49,3 +49,10 @@ class PresidentModel:
             target_f = self._model.predict(state_np)
             target_f[0][action] = target
             self._model.train_on_batch(state_np, target_f)
+
+    def save(self, filepath: str):
+        # tf.keras.callbacks.ModelCheckpoint(filepath=filepath, save_weights_only=True, verbose=1)
+        self._model.save_weights(filepath, overwrite=True)
+
+    def load(self, filepath: str):
+        self._model.load_weights(filepath)

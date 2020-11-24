@@ -14,12 +14,28 @@ if TYPE_CHECKING:
 
 
 class DQLAgent(Agent):
-    def __init__(self, buffer_capacity=1000):
+    def __init__(
+            self,
+            filepath: str,
+            buffer_capacity: int = 1000,
+            hidden_layers: List[int] = [64],
+            load_checkpoint: bool = False,
+            gamma: float = 0.9,
+            batch_size: int = 100,
+    ):
         super().__init__(Player())
-        self.model: PresidentModel = PresidentModel([64])
+        self.model: PresidentModel = PresidentModel(
+            hidden_layers=hidden_layers,
+            gamma=gamma,
+            sample_batch_size=batch_size
+        )
         self.temp_memory: List[Union[List[int], int, int, Optional[List[int]]]] = []
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []
         self.replay_buffer_capacity = buffer_capacity
+        self.filepath = filepath
+
+        if load_checkpoint:
+            self.model.load(filepath)
 
     def make_move(self, table: Table) -> None:
         """
@@ -77,3 +93,4 @@ class DQLAgent(Agent):
         self.temp_memory.clear()
 
         self.model.train_model(self.replay_buffer)
+        self.model.save(self.filepath)
