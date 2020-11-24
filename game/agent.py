@@ -26,7 +26,13 @@ class Agent:
         """
         return sorted(table.deck.card_stack, reverse=True)
 
-    def game_end_callback(self, agent_finish_order: List[Agent], table: Table):
+    def round_end_callback(self, agent_finish_order: List[Agent], table: Table):
+        """
+        Called when a round ends.
+        """
+        pass
+
+    def game_end_callback(self, game_nr: int):
         """
         Called when a game ends.
         """

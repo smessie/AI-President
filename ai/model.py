@@ -1,8 +1,8 @@
-from typing import List, Union, Optional
+import random
+from typing import List, Optional, Union
 
 import numpy as np
 import tensorflow as tf
-import random
 
 
 class PresidentModel:
@@ -12,7 +12,7 @@ class PresidentModel:
         self._model = tf.keras.models.Sequential([
             tf.keras.layers.Dense(units=hidden_layers[0], activation='relu', input_dim=13 * 3),
             *(tf.keras.layers.Dense(units=units, activation='relu') for units in hidden_layers[1:]),
-            tf.keras.layers.Dense(units=20*12+1),
+            tf.keras.layers.Dense(units=20 * 12 + 1),
         ])
         self._model.summary()
         self._model.compile(
@@ -23,7 +23,7 @@ class PresidentModel:
         self._gamma = gamma
         self._sample_batch_size = sample_batch_size
 
-    def calculate_next_move(self, data: List[int])\
+    def calculate_next_move(self, data: List[int]) \
             -> int:
         input_data = \
             np.array(data)[np.newaxis, :]
@@ -31,12 +31,6 @@ class PresidentModel:
         return np.argmax(prediction[0])
 
     def train_model(self, data: List[Union[List[int], int, int, Optional[List[int]]]]):
-        #input_data: List[List[int]] = [*map(lambda x: x[0], data)]
-        #output_data: List[List[int]] = [*map(lambda x: x[1], data)]
-        # TODO: how to pass reward to network?
-        #self._model.fit(x=input_data, y=output_data, batch_size=len(input_data), epochs=10, verbose=0)
-        # TODO: use train_on_batch
-
         sample_batch = random.sample(data, self._sample_batch_size) if self._sample_batch_size < len(data) else data
         for state, action, reward, next_state in sample_batch:
 

@@ -48,8 +48,7 @@ class Table:
 
         return the reward and if the move is final.
         """
-        #print(cards, agent.player.player_id)
-
+        # print(cards, agent.player.player_id)
 
         return self.game.on_move(agent, cards)
 

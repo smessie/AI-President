@@ -58,7 +58,10 @@ class President:
                         self.agent_finish_order.append(agent)
 
                 for agent in self.agents:
-                    agent.game_end_callback(self.agent_finish_order, self.table)
+                    agent.round_end_callback(self.agent_finish_order, self.table)
+
+            for agent in self.agents:
+                agent.game_end_callback(g)
 
         progress.close()
 
@@ -70,7 +73,7 @@ class President:
         if not cards:
             # A Pass, disable the player for this round
             self.passed_agents[agent] = True
-            #print('Player passed')
+            #  print('Player passed')
             return -5, False  # TODO fix reward
 
         # A pass is a valid move.
@@ -78,12 +81,12 @@ class President:
             # WARNING: when playing with 2 decks of cards this is not sufficient.
             if not all(card in agent.player.hand for card in cards):
                 self.passed_agents[agent] = True
-                #print('Player can\'t make move')
+                # print('Player can\'t make move')
                 return -10, False
 
         # Previous value should be lower
         if self.valid_move(cards, debug=False):
-            #print('OK')
+            # print('OK')
             self.table.do_move(agent, cards)
             return 10, False  # TODO fix reward
         else:
@@ -91,7 +94,6 @@ class President:
             return -10, False  # TODO fix reward
 
     def valid_move(self, cards: List[Card], debug=False) -> bool:
-
 
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 

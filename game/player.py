@@ -13,7 +13,7 @@ class Player:
 
     def __init__(self):
         self.hand: List[Card] = []
-        self.player_id: int = Player._player_id
+        self.player_id: int = int(Player._player_id)
         Player._player_id += 1
 
     def get_all_possible_moves(self, table: Table) -> List[List[Card]]:
@@ -23,3 +23,9 @@ class Player:
                 if table.game.valid_move(list(potential_move)):
                     possible_moves.append(list(potential_move))
         return possible_moves
+
+    def get_player_id(self):
+        return self.player_id
+
+    def __eq__(self, other):
+        return self.player_id == other.get_player_id()

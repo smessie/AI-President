@@ -4,7 +4,7 @@ from itertools import chain
 from typing import TYPE_CHECKING, Any, List, Optional, Union
 
 from ai.model import PresidentModel
-from ai.representation_mapper import map_cards_to_vector, map_action_to_cards
+from ai.representation_mapper import map_action_to_cards, map_cards_to_vector
 from game.agent import Agent
 from game.player import Player
 from game.table import Table
@@ -31,8 +31,9 @@ class DQLAgent(Agent):
         )
         self.temp_memory: List[Union[List[int], int, int, Optional[List[int]]]] = []
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []
-        self.replay_buffer_capacity = buffer_capacity
-        self.filepath = filepath
+        self.replay_buffer_capacity: int = buffer_capacity
+        self.filepath: str = filepath
+        self.rounds_positions: Optional[List[int]] = None
 
         if load_checkpoint:
             self.model.load(filepath)
@@ -53,19 +54,25 @@ class DQLAgent(Agent):
 
         calculated_move: int = self.model.calculate_next_move(input_vector)
 
-        self.temp_memory.append([
-            input_vector,
-            calculated_move,
-            0,
-            None
-        ])
-
         move: Optional[List[Card]] = map_action_to_cards(calculated_move, self.player.hand)
 
         if move is None:
-            move = []  # TODO illegal move, do we wat to handle this this way?
+            move = []
+            self.temp_memory.append([
+                input_vector,
+                calculated_move,
+                -10,
+                None
+            ])
             # punish at the end? => -0.01 from final reward per illegal move
             # Save move to memory when illegal-> with negative reward in already existing self.temp_memory[-1]?
+        else:
+            self.temp_memory.append([
+                input_vector,
+                calculated_move,
+                0,
+                None
+            ])
 
         table.try_move(self, move)
 
@@ -76,7 +83,7 @@ class DQLAgent(Agent):
         possible_cards = list(set(table.deck.card_stack) - set(self.player.hand))
         return sorted(possible_cards, reverse=True)
 
-    def game_end_callback(self, agent_finish_order: List[Agent], table: Table):
+    def round_end_callback(self, agent_finish_order: List[Agent], table: Table):
         """
         The game has ended, Train the model based on the moves made during the game and before the game.
         """
@@ -86,11 +93,25 @@ class DQLAgent(Agent):
         # add reward to moves of last round.
         for move in self.temp_memory:
             new_move: Any = list(move)
-            new_move[2] = reward
+            if new_move[2] == 0:
+                # If we didn't set a negative reward already, set the reward equal to the given reward for the game.
+                new_move[2] = reward
             self.replay_buffer.append(new_move)
             if len(self.replay_buffer) > self.replay_buffer_capacity:
                 self.replay_buffer.pop(0)
         self.temp_memory.clear()
 
         self.model.train_model(self.replay_buffer)
+
+        if not self.rounds_positions:
+            self.rounds_positions = [0 for _ in range(len(agent_finish_order))]
+
+        self.rounds_positions[agent_finish_order.index(self)] += 1
+
+    def game_end_callback(self, game_nr: int):
         self.model.save(self.filepath)
+
+        with open('data/results/wins.csv', 'a+') as file:
+            file.write(f'{game_nr},{",".join(map(str, self.rounds_positions))}\n')
+
+        self.rounds_positions = None
