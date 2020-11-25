@@ -12,7 +12,7 @@ def get_played_value(cards: List[Card]) -> Optional[int]:
     """
     played_value: Optional[int] = None
     for card in cards:
-        if card.value != 2:
+        if card.value != 15:  # A 2-card has value 15.
             if played_value and played_value != card.value:
                 # Cards do not have the same rank
                 return -1
