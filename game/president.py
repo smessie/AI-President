@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple
+from itertools import chain
+from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple, Union
 
 from tqdm import tqdm
 
+from ai.representation_mapper import map_cards_to_action, map_cards_to_vector
 from game.table import Table
 from util.cards import get_played_value
 from util.iterator import CustomIterator
@@ -26,6 +28,12 @@ class President:
         self.agent_finish_order: List[Agent] = []
         self.agent_iterator: CustomIterator = CustomIterator(agents)
         self.table = Table(self)
+
+        # Dict[player/agent,
+        # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move]
+        self.temp_memory: Dict[Agent, List[Union[List[int], int, int, Optional[List[int]]]]] = {}
+        for agent in agents:
+            self.temp_memory[agent] = []
 
     def play(self, games: int, rounds: int) -> None:
         """
@@ -84,16 +92,46 @@ class President:
                 # print('Player can\'t make move')
                 return -10, False
 
+        # Save the move to memory to add to our network at the end of the game.
+        cards_in_hand_vector: List[int] = map_cards_to_vector(agent.player.hand)
+        cards_previous_move_vector: List[int] = map_cards_to_vector(
+            self.table.last_move()[0] if self.table.last_move() else [])
+        all_played_cards_vector: List[int] = map_cards_to_vector(
+            list(chain.from_iterable([*map(lambda x: x[0], self.table.played_cards), *self.table.discard_pile])))
+
+        input_vector = cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector
+
+        if self.temp_memory[agent]:  # Set next state of previous move
+            self.temp_memory[agent][-1][3] = input_vector
+
+        calculated_move: int = map_cards_to_action(cards)
+
         # Previous value should be lower
-        if self.valid_move(cards, debug=False):
+        if self.valid_move(cards, agent, debug=False):
             # print('OK')
             self.table.do_move(agent, cards)
-            return 10, False  # TODO fix reward
+
+            self.temp_memory[agent].append([
+                input_vector,
+                calculated_move,
+                0,
+                None
+            ])
+            return 0, False  # TODO fix reward
         else:
             self.passed_agents[agent] = True
+
+            self.temp_memory[agent].append([
+                input_vector,
+                calculated_move,
+                -10,
+                None
+            ])
+            # punish at the end? => -0.01 from final reward per illegal move
+            # Save move to memory when illegal-> with negative reward in already existing self.temp_memory[-1]?
             return -10, False  # TODO fix reward
 
-    def valid_move(self, cards: List[Card], debug=False) -> bool:
+    def valid_move(self, cards: List[Card], agent: Agent, debug=False) -> bool:
 
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
@@ -101,6 +139,17 @@ class President:
         if cards and last_move and len(cards) < len(last_move[0]):
             if debug:
                 print('Not enough cards')
+            return False
+
+        # Check that the agent does not remain with only twos in his hand.
+        remaining_cards = agent.player.hand[:]
+        for card in cards:
+            remaining_cards.remove(card)
+        only_twos_remain: bool = True
+        for card in remaining_cards:
+            if card.get_value() != 15:
+                only_twos_remain = False
+        if only_twos_remain and len(remaining_cards) != 0:
             return False
 
         # Check that each played card in the trick has the same rank, or if not, it is a 2.
@@ -181,3 +230,7 @@ class President:
             yield self.agent_iterator.get()
         # The unfinished player comes last, add it to the last_played lis
         self.agent_finish_order.append(list(filter(lambda x: len(x.player.hand) > 0, self.agents))[0])
+
+    def reset_temp_memory(self):
+        for agent in self.agents:
+            self.temp_memory[agent] = []

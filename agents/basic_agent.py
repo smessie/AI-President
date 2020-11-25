@@ -19,7 +19,7 @@ class BasicAgent(Agent):
         """
         Agent makes a move based on the fact that the hand played has the lowest possible value.
         """
-        possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table)
+        possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
 
         smallest_move = possible_moves[0]
         smallest_move_value: Optional[int] = get_played_value(smallest_move)

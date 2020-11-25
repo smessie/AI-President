@@ -19,7 +19,7 @@ class RandomAgent(Agent):
         """
         Let the agent make a random move from all possible moves in his state.
         """
-        possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table)
+        possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
         table.try_move(self, random.choice(possible_moves))
 
     def get_preferred_card_order(self, table: Table) -> List[Card]:

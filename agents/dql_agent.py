@@ -29,7 +29,7 @@ class DQLAgent(Agent):
             gamma=gamma,
             sample_batch_size=batch_size
         )
-        self.temp_memory: List[Union[List[int], int, int, Optional[List[int]]]] = []
+        # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []
         self.replay_buffer_capacity: int = buffer_capacity
         self.filepath: str = filepath
@@ -48,31 +48,11 @@ class DQLAgent(Agent):
             list(chain.from_iterable([*map(lambda x: x[0], table.played_cards), *table.discard_pile])))
 
         input_vector = cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector
-
-        if self.temp_memory:  # Set next state of previous move
-            self.temp_memory[-1][3] = input_vector
-
         calculated_move: int = self.model.calculate_next_move(input_vector)
-
         move: Optional[List[Card]] = map_action_to_cards(calculated_move, self.player.hand)
 
         if move is None:
             move = []
-            self.temp_memory.append([
-                input_vector,
-                calculated_move,
-                -10,
-                None
-            ])
-            # punish at the end? => -0.01 from final reward per illegal move
-            # Save move to memory when illegal-> with negative reward in already existing self.temp_memory[-1]?
-        else:
-            self.temp_memory.append([
-                input_vector,
-                calculated_move,
-                0,
-                None
-            ])
 
         table.try_move(self, move)
 
@@ -87,19 +67,18 @@ class DQLAgent(Agent):
         """
         The game has ended, Train the model based on the moves made during the game and before the game.
         """
-        reward = len(agent_finish_order) - list(map(
-            lambda agent: agent.player.player_id, agent_finish_order
-        )).index(self.player.player_id)
+        reward_list = list(map(lambda agent: agent.player.player_id, agent_finish_order))
         # add reward to moves of last round.
-        for move in self.temp_memory:
-            new_move: Any = list(move)
-            if new_move[2] == 0:
-                # If we didn't set a negative reward already, set the reward equal to the given reward for the game.
-                new_move[2] = reward
-            self.replay_buffer.append(new_move)
-            if len(self.replay_buffer) > self.replay_buffer_capacity:
-                self.replay_buffer.pop(0)
-        self.temp_memory.clear()
+        for agent in table.game.temp_memory:
+            for move in table.game.temp_memory[agent]:
+                new_move: Any = list(move)
+                if new_move[2] == 0:
+                    # If we didn't set a negative reward already, set the reward equal to the given reward for the game.
+                    new_move[2] = len(agent_finish_order) - reward_list.index(agent.player.player_id)
+                self.replay_buffer.append(new_move)
+                if len(self.replay_buffer) > self.replay_buffer_capacity:
+                    self.replay_buffer.pop(0)
+        table.game.reset_temp_memory()
 
         self.model.train_model(self.replay_buffer)
 
