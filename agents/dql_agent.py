@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from itertools import chain
-from typing import TYPE_CHECKING, Any, List, Optional, Union
+from random import choice, randint
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
 
 from ai.model import PresidentModel
 from ai.representation_mapper import map_action_to_cards, map_cards_to_vector
@@ -49,14 +50,28 @@ class DQLAgent(Agent):
 
         input_vector = cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector
 
+        rand: int = randint(0, 100)
+
         # TODO: implement epsilon greedy policy to take random *possible* moves
-        calculated_move: int = self.model.calculate_next_move(input_vector)
-        move: Optional[List[Card]] = map_action_to_cards(calculated_move, self.player.hand)
+        if rand < 100:
+            q_values: List[Tuple[int, int]] = sorted(
+                [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))
+                 ], key=lambda x: -x[1])
 
-        if move is None:
-            move = []
+            i = 0
+            move: Optional[List[Card]] = map_action_to_cards(q_values[i][0], self.player.hand)
+            while i < len(q_values) and (move is None or not table.game.valid_move(move, self)):
+                i += 1
+                if i >= len(q_values):
+                    move = []
+                else:
+                    move = map_action_to_cards(q_values[i][0], self.player.hand)
 
-        table.try_move(self, move)
+            print(move)
+
+            table.try_move(self, move)
+        else:
+            table.try_move(self, choice(self.player.get_all_possible_moves(table, self)))
 
     def get_preferred_card_order(self, table: Table) -> List[Card]:
         """

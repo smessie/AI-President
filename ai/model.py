@@ -24,11 +24,11 @@ class PresidentModel:
         self._sample_batch_size = sample_batch_size
 
     def calculate_next_move(self, data: List[int]) \
-            -> int:
+            -> List[int]:
         input_data = \
             np.array(data)[np.newaxis, :]
         prediction = self._model.predict(input_data)
-        return np.argmax(prediction[0])  # TODO: filteren op legale
+        return prediction[0]
 
     def train_model(self, data: List[Union[List[int], int, int, Optional[List[int]]]]):
         sample_batch = random.sample(data, self._sample_batch_size) if self._sample_batch_size < len(data) else data

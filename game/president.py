@@ -3,8 +3,8 @@ from __future__ import annotations
 from itertools import chain
 from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple, Union
 
-from tqdm import tqdm
 import numpy as np
+from tqdm import tqdm
 
 from ai.representation_mapper import map_cards_to_action, map_cards_to_vector
 from game.table import Table
@@ -86,7 +86,8 @@ class President:
         all_played_cards_vector: List[int] = map_cards_to_vector(
             list(chain.from_iterable([*map(lambda x: x[0], self.table.played_cards), *self.table.discard_pile])))
 
-        input_vector = np.array(cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector)[np.newaxis, :]
+        input_vector = \
+            np.array(cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector)[np.newaxis, :]
 
         if self.temp_memory[agent]:  # Set next state of previous move
             self.temp_memory[agent][-1][3] = input_vector
