@@ -48,6 +48,8 @@ class DQLAgent(Agent):
             list(chain.from_iterable([*map(lambda x: x[0], table.played_cards), *table.discard_pile])))
 
         input_vector = cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector
+
+        # TODO: implement epsilon greedy policy to take random *possible* moves
         calculated_move: int = self.model.calculate_next_move(input_vector)
         move: Optional[List[Card]] = map_action_to_cards(calculated_move, self.player.hand)
 

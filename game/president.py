@@ -78,20 +78,6 @@ class President:
         Handle move from Agent, We can be sure the agent can actually play the card.
         return (reward, is_final).
         """
-        if not cards:
-            # A Pass, disable the player for this round
-            self.passed_agents[agent] = True
-            #  print('Player passed')
-            return -5, False  # TODO fix reward
-
-        # A pass is a valid move.
-        if len(cards) != 0:
-            # WARNING: when playing with 2 decks of cards this is not sufficient.
-            if not all(card in agent.player.hand for card in cards):
-                self.passed_agents[agent] = True
-                # print('Player can\'t make move')
-                return -10, False
-
         # Save the move to memory to add to our network at the end of the game.
         cards_in_hand_vector: List[int] = map_cards_to_vector(agent.player.hand)
         cards_previous_move_vector: List[int] = map_cards_to_vector(
@@ -105,6 +91,32 @@ class President:
             self.temp_memory[agent][-1][3] = input_vector
 
         calculated_move: int = map_cards_to_action(cards)
+
+        if not cards:
+            # A Pass, disable the player for this round
+            self.passed_agents[agent] = True
+            #  print('Player passed')
+            self.temp_memory[agent].append([
+                input_vector,
+                calculated_move,
+                0,
+                None
+            ])
+            return 0, False  # TODO fix reward
+
+        # A pass is a valid move.
+        if len(cards) != 0:
+            # WARNING: when playing with 2 decks of cards this is not sufficient.
+            if not all(card in agent.player.hand for card in cards):
+                self.passed_agents[agent] = True
+                # print('Player can\'t make move')
+                self.temp_memory[agent].append([
+                    input_vector,
+                    calculated_move,
+                    -10,
+                    None
+                ])
+                return -10, False
 
         # Previous value should be lower
         if self.valid_move(cards, agent, debug=False):

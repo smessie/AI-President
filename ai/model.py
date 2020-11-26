@@ -28,7 +28,7 @@ class PresidentModel:
         input_data = \
             np.array(data)[np.newaxis, :]
         prediction = self._model.predict(input_data)
-        return np.argmax(prediction[0])
+        return np.argmax(prediction[0])  # TODO: filteren op legale
 
     def train_model(self, data: List[Union[List[int], int, int, Optional[List[int]]]]):
         sample_batch = random.sample(data, self._sample_batch_size) if self._sample_batch_size < len(data) else data
@@ -42,7 +42,9 @@ class PresidentModel:
             state_np = np.array(state).reshape(-1, 39)
             target_f = self._model.predict(state_np)
             target_f[0][action] = target
+            # TODO: batch in 1 keer doorgeven voor alle aangepaste sample_batch, alle states in 1 array meegeven
             self._model.train_on_batch(state_np, target_f)
+            # ter debug: values bijhouden, moet dalen, moet verschillend van infinity/NaN
 
     def save(self, filepath: str):
         # tf.keras.callbacks.ModelCheckpoint(filepath=filepath, save_weights_only=True, verbose=1)
