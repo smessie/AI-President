@@ -32,19 +32,21 @@ class PresidentModel:
 
     def train_model(self, data: List[Union[List[int], int, int, Optional[List[int]]]]):
         sample_batch = random.sample(data, self._sample_batch_size) if self._sample_batch_size < len(data) else data
+        states = []
+        targets = []
+
         for state, action, reward, next_state in sample_batch:
 
             target = reward
-            if next_state:
-                ns_np = np.array(next_state).reshape(-1, 39)
-                target = reward + self._gamma * np.amax(self._model.predict(ns_np)[0])
+            if next_state is not None:
+                target = reward + self._gamma * np.amax(self._model.predict(next_state)[0])
 
-            state_np = np.array(state).reshape(-1, 39)
-            target_f = self._model.predict(state_np)
+            target_f = self._model.predict(state)
             target_f[0][action] = target
-            # TODO: batch in 1 keer doorgeven voor alle aangepaste sample_batch, alle states in 1 array meegeven
-            self._model.train_on_batch(state_np, target_f)
+            states.append(state[0])
+            targets.append(target_f[0])
             # ter debug: values bijhouden, moet dalen, moet verschillend van infinity/NaN
+        self._model.train_on_batch(np.array(states), np.array(targets))
 
     def save(self, filepath: str):
         # tf.keras.callbacks.ModelCheckpoint(filepath=filepath, save_weights_only=True, verbose=1)
