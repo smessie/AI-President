@@ -67,8 +67,6 @@ class DQLAgent(Agent):
                 else:
                     move = map_action_to_cards(q_values[i][0], self.player.hand)
 
-            print(move)
-
             table.try_move(self, move)
         else:
             table.try_move(self, choice(self.player.get_all_possible_moves(table, self)))
