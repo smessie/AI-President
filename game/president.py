@@ -69,6 +69,8 @@ class President:
                 for agent in self.agents:
                     agent.round_end_callback(self.agent_finish_order, self.table)
 
+                self.reset_temp_memory()
+
             for agent in self.agents:
                 agent.game_end_callback(g)
 

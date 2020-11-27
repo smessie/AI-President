@@ -6,9 +6,15 @@ from game.president import President
 
 if __name__ == "__main__":
     game = President([
-        DQLAgent('data/training/cp.ckpt', buffer_capacity=2000, hidden_layers=[100, 300], load_checkpoint=False),
+        *(
+            DQLAgent(
+                buffer_capacity=2000,
+                hidden_layers=[78, 260],
+                load_checkpoint=False, batch_size=50
+            ) for _ in range(1)
+        ),
         *(BasicAgent() for _ in range(3))
-    ])  # TODO: tegen random agent
+    ])
 
     # Start the game
-    game.play(1000, 10)
+    game.play(500, 20)

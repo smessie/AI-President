@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from itertools import chain
 from random import choice, randint
+from pathlib import Path
+from os import mkdir, path
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
 
 from ai.model import PresidentModel
@@ -17,7 +19,8 @@ if TYPE_CHECKING:
 class DQLAgent(Agent):
     def __init__(
             self,
-            filepath: str,
+            filepath: str = None,
+            csv_filepath: str = None,
             buffer_capacity: int = 1000,
             hidden_layers: List[int] = [64],
             load_checkpoint: bool = False,
@@ -33,7 +36,13 @@ class DQLAgent(Agent):
         # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []
         self.replay_buffer_capacity: int = buffer_capacity
-        self.filepath: str = filepath
+        self.filepath: str = filepath if filepath else f'data/training-{self.player.player_id}/cp.ckpt'
+        self.csv_filepath = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
+
+        for p in [Path(self.filepath), Path(self.csv_filepath)]:
+            if not path.exists(p.parent.__str__()):
+                mkdir(p.parent)
+
         self.rounds_positions: Optional[List[int]] = None
 
         if load_checkpoint:
@@ -53,7 +62,7 @@ class DQLAgent(Agent):
         rand: int = randint(0, 100)
 
         # TODO: implement epsilon greedy policy to take random *possible* moves
-        if rand < 100:
+        if rand < 95:
             q_values: List[Tuple[int, int]] = sorted(
                 [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))
                  ], key=lambda x: -x[1])
@@ -93,7 +102,6 @@ class DQLAgent(Agent):
                 self.replay_buffer.append(new_move)
                 if len(self.replay_buffer) > self.replay_buffer_capacity:
                     self.replay_buffer.pop(0)
-        table.game.reset_temp_memory()
 
         self.model.train_model(self.replay_buffer)
 
@@ -105,7 +113,7 @@ class DQLAgent(Agent):
     def game_end_callback(self, game_nr: int):
         self.model.save(self.filepath)
 
-        with open('data/results/wins.csv', 'a+') as file:
+        with open(self.csv_filepath, 'a+') as file:
             file.write(f'{game_nr},{",".join(map(str, self.rounds_positions))}\n')
 
         self.rounds_positions = None
