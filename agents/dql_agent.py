@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from itertools import chain
-from random import choice, randint
-from pathlib import Path
 from os import mkdir, path
+from pathlib import Path
+from random import choice, randint
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
 
 from ai.model import PresidentModel
