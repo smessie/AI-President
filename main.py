@@ -2,6 +2,7 @@
 
 from agents.basic_agent import BasicAgent
 from agents.dql_agent import DQLAgent
+from agents.random_agent import RandomAgent
 from game.president import President
 
 if __name__ == "__main__":
@@ -10,10 +11,12 @@ if __name__ == "__main__":
             DQLAgent(
                 buffer_capacity=2000,
                 hidden_layers=[78, 260],
-                load_checkpoint=False, batch_size=50
+                load_checkpoint=False,
+                batch_size=50,
+                epsilon=20
             ) for _ in range(1)
         ),
-        *(BasicAgent() for _ in range(3))
+        *(RandomAgent() for _ in range(3))
     ])
 
     # Start the game

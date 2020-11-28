@@ -26,6 +26,7 @@ class DQLAgent(Agent):
             load_checkpoint: bool = False,
             gamma: float = 0.9,
             batch_size: int = 100,
+            epsilon: int = 5,
     ):
         super().__init__(Player())
         self.model: PresidentModel = PresidentModel(
@@ -38,6 +39,7 @@ class DQLAgent(Agent):
         self.replay_buffer_capacity: int = buffer_capacity
         self.filepath: str = filepath if filepath else f'data/training-{self.player.player_id}/cp.ckpt'
         self.csv_filepath = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
+        self.epsilon = epsilon
 
         for p in [Path(self.filepath), Path(self.csv_filepath)]:
             if not path.exists(p.parent.__str__()):
@@ -61,7 +63,7 @@ class DQLAgent(Agent):
 
         rand: int = randint(0, 100)
 
-        if rand < 95:
+        if rand > self.epsilon:
             q_values: List[Tuple[int, int]] = sorted(
                 [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))
                  ], key=lambda x: -x[1])
