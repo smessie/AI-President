@@ -1,4 +1,5 @@
 import enum
+from typing import List
 
 
 class Color(enum.Enum):
@@ -21,6 +22,9 @@ class Suit(enum.Enum):
     def get_color(self):
         """Suits have fixed colors"""
         return Color.Red if self.value % 2 == 0 else Color.Black
+
+    def get_symbol(self) -> str:
+        return ['', '♣', '♦', '♠', '♥'][self.value]
 
 
 class Card:
@@ -68,3 +72,27 @@ class Card:
 
     def __repr__(self):
         return self.name
+
+    def get_card_strings(self) -> List[str]:
+        value = self.value if self.value < 10 else (
+            'X' if self.value == 10 else (
+                'J' if self.value == 11 else (
+                    'Q' if self.value == 12 else (
+                        'K' if self.value == 13 else (
+                            'A' if self.value == 14 else '2'
+                        )
+                    )
+                )
+            )
+        )
+        return [
+            "┌-------------┐",
+            f"| {value}           |",
+            "|             |",
+            "|             |",
+            f"|      {self.suit.get_symbol()}      |",
+            "|             |",
+            "|             |",
+            f"|           {value} |",
+            "└-------------┘",
+        ]

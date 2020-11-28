@@ -61,7 +61,6 @@ class DQLAgent(Agent):
 
         rand: int = randint(0, 100)
 
-        # TODO: implement epsilon greedy policy to take random *possible* moves
         if rand < 95:
             q_values: List[Tuple[int, int]] = sorted(
                 [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))

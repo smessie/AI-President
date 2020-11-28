@@ -45,7 +45,7 @@ class PresidentModel:
             target_f[0][action] = target
             states.append(state[0])
             targets.append(target_f[0])
-            # ter debug: values bijhouden, moet dalen, moet verschillend van infinity/NaN
+            # TODO: values bijhouden, moet dalen, moet verschillend van infinity/NaN
         self._model.train_on_batch(np.array(states), np.array(targets))
 
     def save(self, filepath: str):

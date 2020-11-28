@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from ai.representation_mapper import map_cards_to_action, map_cards_to_vector
 from game.table import Table
-from util.cards import get_played_value
+from util.cards import get_played_value, print_cards
 from util.iterator import CustomIterator
 
 if TYPE_CHECKING:
@@ -21,7 +21,7 @@ class President:
     A class containing the game logic.
     """
 
-    def __init__(self, agents: List[Agent]):
+    def __init__(self, agents: List[Agent], verbose: bool = False):
         self.agents: List[Agent] = agents
         self.passed_agents: Dict[Agent, bool] = {
             agent: False for agent in self.agents
@@ -35,6 +35,7 @@ class President:
         self.temp_memory: Dict[Agent, List[Union[List[int], int, int, Optional[List[int]]]]] = {}
         for agent in agents:
             self.temp_memory[agent] = []
+        self.verbose = verbose
 
     def play(self, games: int, rounds: int) -> None:
         """
@@ -69,6 +70,10 @@ class President:
                 for agent in self.agents:
                     agent.round_end_callback(self.agent_finish_order, self.table)
 
+                if self.verbose:
+                    print(f'End order: {list(map(lambda x: x.player.player_id, self.agent_finish_order))}')
+                    print('-' * 40)
+
                 self.reset_temp_memory()
 
             for agent in self.agents:
@@ -76,6 +81,7 @@ class President:
 
         progress.close()
 
+    # flake8: noqa: C901
     def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
         """
         Handle move from Agent, We can be sure the agent can actually play the card.
@@ -96,6 +102,9 @@ class President:
 
         calculated_move: int = map_cards_to_action(cards)
 
+        if self.verbose:
+            print('-' * 40)
+
         if not cards:
             # A Pass, disable the player for this round
             self.passed_agents[agent] = True
@@ -106,6 +115,9 @@ class President:
                 0,
                 None
             ])
+            if self.verbose:
+                print(f'Player {agent.player.player_id} has passed.')
+
             return 0, False  # TODO fix reward
 
         # A pass is a valid move.
@@ -120,6 +132,9 @@ class President:
                     -10,
                     None
                 ])
+                if self.verbose:
+                    print(f'Player {agent.player.player_id} can\'t make move and is forces to pass.')
+
                 return -10, False
 
         # Previous value should be lower
@@ -133,6 +148,11 @@ class President:
                 0,
                 None
             ])
+
+            if self.verbose:
+                print(f'Player {agent.player.player_id} makes move and has {len(agent.player.hand)} cards left:')
+                print_cards(cards)
+
             return 0, False  # TODO fix reward
         else:
             self.passed_agents[agent] = True
@@ -143,6 +163,9 @@ class President:
                 -10,
                 None
             ])
+            if self.verbose:
+                print(f'Player {agent.player.player_id} plays invalid move and is forces to pass.')
+
             # punish at the end? => -0.01 from final reward per illegal move
             # Save move to memory when illegal-> with negative reward in already existing self.temp_memory[-1]?
             return -10, False  # TODO fix reward
