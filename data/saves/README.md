@@ -19,3 +19,11 @@ Try if he doesn't need epsilon greedy policy if he can learn from his opponents 
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 50         | 3             | 0            | 78, 260       | 2000            | 0       |
+
+## 3
+250 games with 20 rounds each.
+Epsilon = 20
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 50         | 3             | 0            | 78, 260       | 2000            | 0       |
