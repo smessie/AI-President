@@ -26,4 +26,12 @@ Epsilon = 20
 
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
-| 50         | 3             | 0            | 78, 260       | 2000            | 0       |
+| 50         | 3             | 0            | 78, 260       | 2000            | 20      |
+
+## 4
+250 games with 20 rounds each.
+Epsilon = 20
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 100        | 3             | 0            | 78, 260       | 2000            | 20      |
