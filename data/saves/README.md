@@ -44,3 +44,12 @@ More (relatively small) hidden layers.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 20         | 3             | 0            | 78, 78, 78    | 2000            | 20      |
+
+## 6
+250 games with 20 rounds each.
+Epsilon = 20
+More different rewards.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 20         | 3             | 0            | 78, 260       | 2000            | 20      |
