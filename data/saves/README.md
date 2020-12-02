@@ -62,3 +62,12 @@ One larger hidden layer
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 20         | 3             | 0            | 480           | 2000            | 20      |
+
+## 8
+250 games with 20 rounds each.
+Epsilon = 20
+Train against 2 basic and 1 random agent. He can learn more from basic agents?
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 20         | 1             | 2            | 78, 260       | 2000            | 20      |
