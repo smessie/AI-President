@@ -110,7 +110,7 @@ class DQLAgent(Agent):
                 new_move: Any = list(move)
                 if new_move[2] == 0:
                     # If we didn't set a negative reward already, set the reward equal to the given reward for the game.
-                    new_move[2] = (len(agent_finish_order) - (reward_list.index(agent.player.player_id) - 1) ^ 2) + \
+                    new_move[2] = (len(agent_finish_order) - (reward_list.index(agent.player.player_id) - 1) ** 2) + \
                                   total_living_reward
                 self.replay_buffer.append(new_move)
                 if len(self.replay_buffer) > self.replay_buffer_capacity:
