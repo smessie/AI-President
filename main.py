@@ -13,7 +13,8 @@ if __name__ == "__main__":
                 hidden_layers=[78, 260],
                 load_checkpoint=False,
                 batch_size=50,
-                epsilon=20,
+                epsilon=5,
+                lower_eps_over_time=100,
                 track_training_loss=True,
                 living_reward=-0.01
             ) for _ in range(1)

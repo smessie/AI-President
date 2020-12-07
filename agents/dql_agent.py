@@ -27,6 +27,7 @@ class DQLAgent(Agent):
             gamma: float = 0.9,
             batch_size: int = 100,
             epsilon: int = 5,
+            lower_eps_over_time: int = 0,
             track_training_loss: bool = False,
             living_reward: float = -0.01
     ):
@@ -43,6 +44,7 @@ class DQLAgent(Agent):
         self.filepath: str = filepath if filepath else f'data/training-{self.player.player_id}/cp.ckpt'
         self.csv_filepath: str = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
         self.epsilon: int = epsilon
+        self.lower_eps_over_time = lower_eps_over_time
         self.living_reward: float = living_reward
 
         for p in [Path(self.filepath), Path(self.csv_filepath)]:
@@ -67,7 +69,11 @@ class DQLAgent(Agent):
 
         rand: int = randint(0, 100)
 
-        if rand > self.epsilon:
+        exploration_chance: int = self.epsilon
+        if self.lower_eps_over_time > 0:
+            exploration_chance = self.lower_eps_over_time
+            self.lower_eps_over_time -= 1
+        if rand > exploration_chance:
             q_values: List[Tuple[int, int]] = sorted(
                 [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))
                  ], key=lambda x: -x[1])
