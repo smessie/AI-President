@@ -17,6 +17,14 @@ if TYPE_CHECKING:
 
 
 class DQLAgent(Agent):
+    """
+    lower_eps_over_time adjusts the epsilon greedy policy by lowering epsilon over time.
+    Every round, the eps_over_time is decreased with one, eps_over_time/lower_eps_over_time is used as epsilon in the
+     epsilon greedy policy to do exploration as long as eps_over_time is bigger than zero.
+
+    In training_mode=False, the epsilon parameter is ignored and all moves are requested from the model.
+    In this mode there is no learning, no data is written to the model.
+    """
     def __init__(
             self,
             filepath: str = None,
@@ -45,6 +53,7 @@ class DQLAgent(Agent):
         self.csv_filepath: str = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
         self.epsilon: int = epsilon
         self.lower_eps_over_time = lower_eps_over_time
+        self.eps_over_time = lower_eps_over_time
         self.living_reward: float = living_reward
 
         for p in [Path(self.filepath), Path(self.csv_filepath)]:
@@ -70,9 +79,8 @@ class DQLAgent(Agent):
         rand: int = randint(0, 100)
 
         exploration_chance: int = self.epsilon
-        if self.lower_eps_over_time > 0:
-            exploration_chance = self.lower_eps_over_time
-            self.lower_eps_over_time -= 1
+        if self.eps_over_time > 0:
+            exploration_chance: float = self.eps_over_time / self.lower_eps_over_time
         if rand > exploration_chance:
             q_values: List[Tuple[int, int]] = sorted(
                 [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))
@@ -118,6 +126,9 @@ class DQLAgent(Agent):
                 total_living_reward -= self.living_reward
 
         self.model.train_model(self.replay_buffer)
+
+        if self.eps_over_time > 0:
+            self.eps_over_time -= 1
 
         if not self.rounds_positions:
             self.rounds_positions = [0 for _ in range(len(agent_finish_order))]
