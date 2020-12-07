@@ -27,7 +27,8 @@ class DQLAgent(Agent):
             gamma: float = 0.9,
             batch_size: int = 100,
             epsilon: int = 5,
-            track_training_loss: bool = False
+            track_training_loss: bool = False,
+            living_reward: float = -0.01
     ):
         super().__init__(Player())
         self.model: PresidentModel = PresidentModel(
@@ -40,8 +41,9 @@ class DQLAgent(Agent):
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []
         self.replay_buffer_capacity: int = buffer_capacity
         self.filepath: str = filepath if filepath else f'data/training-{self.player.player_id}/cp.ckpt'
-        self.csv_filepath = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
-        self.epsilon = epsilon
+        self.csv_filepath: str = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
+        self.epsilon: int = epsilon
+        self.living_reward: float = living_reward
 
         for p in [Path(self.filepath), Path(self.csv_filepath)]:
             if not path.exists(p.parent.__str__()):
@@ -97,14 +99,17 @@ class DQLAgent(Agent):
         reward_list = list(map(lambda agent: agent.player.player_id, agent_finish_order))
         # add reward to moves of last round.
         for agent in table.game.temp_memory:
+            total_living_reward: float = len(table.game.temp_memory[agent]) * self.living_reward + self.living_reward
             for move in table.game.temp_memory[agent]:
                 new_move: Any = list(move)
                 if new_move[2] == 0:
                     # If we didn't set a negative reward already, set the reward equal to the given reward for the game.
-                    new_move[2] = (len(agent_finish_order) - reward_list.index(agent.player.player_id) - 1) ^ 2
+                    new_move[2] = (len(agent_finish_order) - (reward_list.index(agent.player.player_id) - 1) ^ 2) + \
+                                  total_living_reward
                 self.replay_buffer.append(new_move)
                 if len(self.replay_buffer) > self.replay_buffer_capacity:
                     self.replay_buffer.pop(0)
+                total_living_reward -= self.living_reward
 
         self.model.train_model(self.replay_buffer)
 

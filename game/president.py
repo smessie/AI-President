@@ -207,7 +207,7 @@ class President:
         self.table.reset()
 
     def _exchange_cards(self) -> None:
-        # Todo discuss this, but for now only the first and last player trade cards
+        # For now only the first and last player trade cards as this should not directly affect the learning.
         first: Agent = self.agent_finish_order[0]
         last: Agent = self.agent_finish_order[-1]
         preferred_cards: List[Card] = first.get_preferred_card_order(self.table)

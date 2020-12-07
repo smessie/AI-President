@@ -14,7 +14,8 @@ if __name__ == "__main__":
                 load_checkpoint=False,
                 batch_size=50,
                 epsilon=20,
-                track_training_loss=True
+                track_training_loss=True,
+                living_reward=-0.01
             ) for _ in range(1)
         ),
         *(RandomAgent() for _ in range(3))
