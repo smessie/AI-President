@@ -37,7 +37,8 @@ class DQLAgent(Agent):
             epsilon: int = 5,
             lower_eps_over_time: int = 0,
             track_training_loss: bool = False,
-            living_reward: float = -0.01
+            living_reward: float = -0.01,
+            training_mode: bool = True
     ):
         super().__init__(Player())
         self.model: PresidentModel = PresidentModel(
@@ -55,6 +56,7 @@ class DQLAgent(Agent):
         self.lower_eps_over_time = lower_eps_over_time
         self.eps_over_time = lower_eps_over_time
         self.living_reward: float = living_reward
+        self.training_mode: bool = training_mode
 
         for p in [Path(self.filepath), Path(self.csv_filepath)]:
             if not path.exists(p.parent.__str__()):
@@ -81,7 +83,9 @@ class DQLAgent(Agent):
         exploration_chance: int = self.epsilon
         if self.eps_over_time > 0:
             exploration_chance: float = self.eps_over_time / self.lower_eps_over_time
-        if rand > exploration_chance:
+        if not self.training_mode:
+            exploration_chance = 0
+        if rand >= exploration_chance:
             q_values: List[Tuple[int, int]] = sorted(
                 [(i, v) for i, v in enumerate(self.model.calculate_next_move(input_vector))
                  ], key=lambda x: -x[1])
@@ -110,22 +114,25 @@ class DQLAgent(Agent):
         """
         The game has ended, Train the model based on the moves made during the game and before the game.
         """
-        reward_list = list(map(lambda agent: agent.player.player_id, agent_finish_order))
-        # add reward to moves of last round.
-        for agent in table.game.temp_memory:
-            total_living_reward: float = len(table.game.temp_memory[agent]) * self.living_reward + self.living_reward
-            for move in table.game.temp_memory[agent]:
-                new_move: Any = list(move)
-                if new_move[2] == 0:
-                    # If we didn't set a negative reward already, set the reward equal to the given reward for the game.
-                    new_move[2] = (len(agent_finish_order) - (reward_list.index(agent.player.player_id) - 1) ** 2) + \
-                                  total_living_reward
-                self.replay_buffer.append(new_move)
-                if len(self.replay_buffer) > self.replay_buffer_capacity:
-                    self.replay_buffer.pop(0)
-                total_living_reward -= self.living_reward
+        if self.training_mode:
+            reward_list = list(map(lambda agent: agent.player.player_id, agent_finish_order))
+            # add reward to moves of last round.
+            for agent in table.game.temp_memory:
+                total_living_reward: float =\
+                    len(table.game.temp_memory[agent]) * self.living_reward + self.living_reward
+                for move in table.game.temp_memory[agent]:
+                    new_move: Any = list(move)
+                    if new_move[2] == 0:
+                        # If we didn't set a negative reward already, set the reward equal to the given reward for the
+                        # game.
+                        new_move[2] = (len(agent_finish_order) -
+                                       (reward_list.index(agent.player.player_id) - 1) ** 2) + total_living_reward
+                    self.replay_buffer.append(new_move)
+                    if len(self.replay_buffer) > self.replay_buffer_capacity:
+                        self.replay_buffer.pop(0)
+                    total_living_reward -= self.living_reward
 
-        self.model.train_model(self.replay_buffer)
+            self.model.train_model(self.replay_buffer)
 
         if self.eps_over_time > 0:
             self.eps_over_time -= 1

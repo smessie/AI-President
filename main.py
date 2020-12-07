@@ -16,7 +16,8 @@ if __name__ == "__main__":
                 epsilon=20,
                 lower_eps_over_time=0,
                 track_training_loss=True,
-                living_reward=0
+                living_reward=-0.01,
+                training_mode=True
             ) for _ in range(1)
         ),
         *(RandomAgent() for _ in range(3))
