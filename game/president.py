@@ -82,10 +82,9 @@ class President:
         progress.close()
 
     # flake8: noqa: C901
-    def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
+    def on_move(self, agent: Agent, cards: List[Card]) -> None:
         """
         Handle move from Agent, We can be sure the agent can actually play the card.
-        return (reward, is_final).
         """
         # Save the move to memory to add to our network at the end of the game.
         cards_in_hand_vector: List[int] = map_cards_to_vector(agent.player.hand)
@@ -117,15 +116,13 @@ class President:
             ])
             if self.verbose:
                 print(f'Player {agent.player.player_id} has passed.')
-
-            return 0, False  # TODO fix reward
+            return None
 
         # A pass is a valid move.
         if len(cards) != 0:
             # WARNING: when playing with 2 decks of cards this is not sufficient.
             if not all(card in agent.player.hand for card in cards):
                 self.passed_agents[agent] = True
-                # print('Player can\'t make move')
                 self.temp_memory[agent].append([
                     input_vector,
                     calculated_move,
@@ -133,13 +130,11 @@ class President:
                     None
                 ])
                 if self.verbose:
-                    print(f'Player {agent.player.player_id} can\'t make move and is forces to pass.')
-
-                return -10, False
+                    print(f'Player {agent.player.player_id} can\'t make move and is forced to pass.')
+                return None
 
         # Previous value should be lower
         if self.valid_move(cards, agent, debug=False):
-            # print('OK')
             self.table.do_move(agent, cards)
 
             self.temp_memory[agent].append([
@@ -152,8 +147,7 @@ class President:
             if self.verbose:
                 print(f'Player {agent.player.player_id} makes move and has {len(agent.player.hand)} cards left:')
                 print_cards(cards)
-
-            return 0, False  # TODO fix reward
+            return None
         else:
             self.passed_agents[agent] = True
 
@@ -164,11 +158,11 @@ class President:
                 None
             ])
             if self.verbose:
-                print(f'Player {agent.player.player_id} plays invalid move and is forces to pass.')
+                print(f'Player {agent.player.player_id} plays invalid move and is forced to pass.')
 
             # punish at the end? => -0.01 from final reward per illegal move
             # Save move to memory when illegal-> with negative reward in already existing self.temp_memory[-1]?
-            return -10, False  # TODO fix reward
+            return None
 
     def valid_move(self, cards: List[Card], agent: Agent, debug=False) -> bool:
 
