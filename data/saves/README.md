@@ -1,4 +1,14 @@
 # Overview of all trainings
+
+
+## BaseLine
+10 games with 20 rounds each.
+Untrained agent
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| (/) 20     | 2             | 1            | 78, 260       | (/) 2000        | (/) 5   |
+
 ## 0
 
 
@@ -46,14 +56,13 @@ More (relatively small) hidden layers.
 | 20         | 3             | 0            | 78, 78, 78    | 2000            | 20      |
 
 ## 6
-### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 More different rewards. Change also kept for further trainings.
 
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
-| 20         | 3             | 0            | 78, 260       | 2000            | 20      |
+| 50         | 3             | 0            | 78, 260       | 2000            | 20      |
 
 ## 7
 ### TODO: Rerun this training, we had wrong results before
