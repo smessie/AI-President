@@ -46,6 +46,7 @@ More (relatively small) hidden layers.
 | 20         | 3             | 0            | 78, 78, 78    | 2000            | 20      |
 
 ## 6
+### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 More different rewards. Change also kept for further trainings.
@@ -55,6 +56,7 @@ More different rewards. Change also kept for further trainings.
 | 20         | 3             | 0            | 78, 260       | 2000            | 20      |
 
 ## 7
+### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 One larger hidden layer
@@ -64,6 +66,7 @@ One larger hidden layer
 | 20         | 3             | 0            | 480           | 2000            | 20      |
 
 ## 8
+### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 Train against 2 basic and 1 random agent. He can learn more from basic agents?
@@ -73,6 +76,7 @@ Train against 2 basic and 1 random agent. He can learn more from basic agents?
 | 20         | 1             | 2            | 78, 260       | 2000            | 20      |
 
 ## 9
+### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 Living reward of -0.01, which means that for each agent the last move counts for 100% but a negative reward of -0.01 is deducted for each previous move.  
