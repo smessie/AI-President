@@ -27,12 +27,14 @@ class DQLAgent(Agent):
             gamma: float = 0.9,
             batch_size: int = 100,
             epsilon: int = 5,
+            track_training_loss: bool = False
     ):
         super().__init__(Player())
         self.model: PresidentModel = PresidentModel(
             hidden_layers=hidden_layers,
             gamma=gamma,
-            sample_batch_size=batch_size
+            sample_batch_size=batch_size,
+            track_training_loss=track_training_loss
         )
         # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []

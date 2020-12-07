@@ -13,7 +13,8 @@ if __name__ == "__main__":
                 hidden_layers=[78, 260],
                 load_checkpoint=False,
                 batch_size=50,
-                epsilon=20
+                epsilon=20,
+                track_training_loss=True
             ) for _ in range(1)
         ),
         *(RandomAgent() for _ in range(3))
