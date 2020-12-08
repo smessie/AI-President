@@ -105,3 +105,13 @@ Change buffer capacity from 2000 to 500 to investigate effect on training loss.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 50         | 1             | 2            | 78, 260       | 500             | 20      |
+
+## 11
+250 games with 20 rounds each.  
+Epsilon = 0  
+Includes living reward as in training 9.  
+Enabled lower epsilon over time starting from 4000.  
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 50         | 1             | 2            | 78, 260       | 2000            | 0       |
