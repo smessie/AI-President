@@ -84,7 +84,6 @@ Train against 2 basic and 1 random agent. He can learn more from basic agents?
 | 50         | 1             | 2            | 78, 260       | 2000            | 20      |
 
 ## 9
-### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 Living reward of -0.01, which means that for each agent the last move counts for 100% but a negative reward of -0.01 is deducted for each previous move.  
@@ -95,7 +94,7 @@ move 3: reward
 
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
-| 20         | 1             | 2            | 78, 260       | 2000            | 20      |
+| 50         | 1             | 2            | 78, 260       | 2000            | 20      |
 
 ## 10
 250 games with 20 rounds each.  
