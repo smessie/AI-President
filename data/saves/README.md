@@ -96,3 +96,13 @@ move 3: reward
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 20         | 1             | 2            | 78, 260       | 2000            | 20      |
+
+## 10
+250 games with 20 rounds each.  
+Epsilon = 20  
+Includes living reward as in training 9.  
+Change buffer capacity from 2000 to 500 to investigate effect on training loss.  
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 50         | 1             | 2            | 78, 260       | 500             | 20      |
