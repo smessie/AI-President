@@ -115,3 +115,14 @@ Enabled lower epsilon over time starting from 4000.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 50         | 1             | 2            | 78, 260       | 2000            | 0       |
+
+## 12
+Basicagent looks like it yields better result, so training on basic agents
+(working towards batch size= 100 (since most games average 80 turns) , epsilon of 5)
+250 games with 20 rounds each.
+Epsilon = 20
+More different rewards. Change also kept for further trainings.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 50         | 0             | 3            | 78, 260       | 2000            | 20      |
