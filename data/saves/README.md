@@ -135,3 +135,14 @@ Includes living reward as in training 9, but now against 3 random agents.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
 | -----------|---------------|--------------|---------------|-----------------|---------|
 | 50         | 3             | 0            | 78, 260       | 2000            | 20      |
+
+## 14
+250 games with 20 rounds each.  
+Epsilon = 20  
+Includes living reward as in training 9.  
+Enabled lower epsilon over time starting from 4000.  
+Variation on training 11 but epsilon after lowering is now 20.  
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon |
+| -----------|---------------|--------------|---------------|-----------------|---------|
+| 50         | 1             | 2            | 78, 260       | 2000            | 20      |
