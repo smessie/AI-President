@@ -143,7 +143,8 @@ class DQLAgent(Agent):
         self.rounds_positions[agent_finish_order.index(self)] += 1
 
     def game_end_callback(self, game_nr: int):
-        self.model.save(self.filepath)
+        if self.training_mode:
+            self.model.save(self.filepath)
 
         with open(self.csv_filepath, 'a+') as file:
             file.write(f'{game_nr},{",".join(map(str, self.rounds_positions))}\n')
