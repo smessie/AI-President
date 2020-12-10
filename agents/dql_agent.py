@@ -36,6 +36,7 @@ class DQLAgent(Agent):
             batch_size: int = 100,
             epsilon: int = 5,
             lower_eps_over_time: int = 0,
+            start_eps_over_time: int = 100,
             track_training_loss: bool = False,
             living_reward: float = -0.01,
             training_mode: bool = True
@@ -53,8 +54,9 @@ class DQLAgent(Agent):
         self.filepath: str = filepath if filepath else f'data/training-{self.player.player_id}/cp.ckpt'
         self.csv_filepath: str = csv_filepath if csv_filepath else f'data/results/wins-{self.player.player_id}.csv'
         self.epsilon: int = epsilon
-        self.lower_eps_over_time = lower_eps_over_time
-        self.eps_over_time = lower_eps_over_time
+        self.lower_eps_over_time: int = lower_eps_over_time
+        self.start_eps_over_time: float = start_eps_over_time / 100
+        self.eps_over_time: int = lower_eps_over_time
         self.living_reward: float = living_reward
         self.training_mode: bool = training_mode
 
@@ -80,9 +82,9 @@ class DQLAgent(Agent):
 
         rand: int = randint(0, 100)
 
-        exploration_chance: int = self.epsilon
+        exploration_chance: float = self.epsilon
         if self.eps_over_time > 0:
-            exploration_chance: float = self.eps_over_time / self.lower_eps_over_time
+            exploration_chance: float = (self.eps_over_time / self.lower_eps_over_time) * self.start_eps_over_time
         if not self.training_mode:
             exploration_chance = 0
         if rand >= exploration_chance:
