@@ -172,3 +172,10 @@ Before gamma was 0.9
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 1             | 1            | 78, 260       | 2000            | 5       | 0.1   |
+
+## 18
+Based on results of training 1 to 15 we try to guess the best possible parameters.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 500             | 5       | 0.9   |
