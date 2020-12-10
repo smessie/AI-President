@@ -110,7 +110,7 @@ Change buffer capacity from 2000 to 500 to investigate effect on training loss.
 250 games with 20 rounds each.  
 Epsilon = 0  
 Includes living reward as in training 9.  
-Enabled lower epsilon over time starting from 4000.  
+Enabled lower epsilon over time starting over 4000 training on batches and with epsilon starting at 100%.  
 
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
@@ -140,7 +140,7 @@ Includes living reward as in training 9, but now against 3 random agents.
 250 games with 20 rounds each.  
 Epsilon = 20  
 Includes living reward as in training 9.  
-Enabled lower epsilon over time starting from 4000.  
+Enabled lower epsilon over time starting over 4000 training on batches and with epsilon starting at 100%.  
 Variation on training 11 but epsilon after lowering is now 20.  
 
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
@@ -179,3 +179,12 @@ Based on results of training 1 to 15 we try to guess the best possible parameter
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 5       | 0.9   |
+
+## 19
+Based on results of training 1 to 15 we try to guess the best possible parameters.  
+Differs from #18 as this has lower epsilon over time starting over 4000 training on batches and with epsilon starting at 10%.
+Final 1000 batches are with fixed epsilon equal to 1%.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.9   |
