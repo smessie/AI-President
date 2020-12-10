@@ -163,3 +163,12 @@ Before gamma was 0.9
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
+
+## 17
+Training 2 dql-agents
+250 games with 20 rounds each.
+Before gamma was 0.9
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 1             | 1            | 78, 260       | 2000            | 5       | 0.1   |
