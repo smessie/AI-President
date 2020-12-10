@@ -13,6 +13,7 @@ def plot(file):
         ax.legend()
 
         plt.savefig(f"{file}.png", bbox_inches='tight')
+        plt.close()
     except Exception as e:
         print(e)
 
