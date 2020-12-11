@@ -205,3 +205,11 @@ Differs from #19 as this has gamma equal to 0.1.
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.1   |
 
+## 22
+Based on results of training 1 to 15 we try to guess the best possible parameters.  
+Differs from #19 as this has now early stopping enabled!
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.9   |
+
