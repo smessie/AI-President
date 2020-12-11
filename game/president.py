@@ -76,8 +76,11 @@ class President:
 
                 self.reset_temp_memory()
 
+            triggered_early_stopping = False
             for agent in self.agents:
-                agent.game_end_callback(g)
+                triggered_early_stopping = agent.game_end_callback(g) or triggered_early_stopping
+            if triggered_early_stopping:
+                break
 
         progress.close()
 

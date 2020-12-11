@@ -39,14 +39,16 @@ class DQLAgent(Agent):
             start_eps_over_time: int = 100,
             track_training_loss: bool = False,
             living_reward: float = -0.01,
-            training_mode: bool = True
+            training_mode: bool = True,
+            early_stopping: bool = False
     ):
         super().__init__(Player())
         self.model: PresidentModel = PresidentModel(
             hidden_layers=hidden_layers,
             gamma=gamma,
             sample_batch_size=batch_size,
-            track_training_loss=track_training_loss
+            track_training_loss=track_training_loss,
+            early_stopping=early_stopping
         )
         # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []
@@ -65,6 +67,7 @@ class DQLAgent(Agent):
                 mkdir(p.parent)
 
         self.rounds_positions: Optional[List[int]] = None
+        self.triggered_early_stopping = False
 
         if load_checkpoint:
             self.model.load(filepath)
@@ -134,7 +137,7 @@ class DQLAgent(Agent):
                         self.replay_buffer.pop(0)
                     total_living_reward -= self.living_reward
 
-            self.model.train_model(self.replay_buffer)
+            self.triggered_early_stopping = self.model.train_model(self.replay_buffer) or self.triggered_early_stopping
 
         if self.eps_over_time > 0:
             self.eps_over_time -= 1
@@ -144,7 +147,7 @@ class DQLAgent(Agent):
 
         self.rounds_positions[agent_finish_order.index(self)] += 1
 
-    def game_end_callback(self, game_nr: int):
+    def game_end_callback(self, game_nr: int) -> bool:
         if self.training_mode:
             self.model.save(self.filepath)
 
@@ -152,3 +155,4 @@ class DQLAgent(Agent):
             file.write(f'{game_nr},{",".join(map(str, self.rounds_positions))}\n')
 
         self.rounds_positions = None
+        return self.triggered_early_stopping

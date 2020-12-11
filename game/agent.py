@@ -32,8 +32,10 @@ class Agent:
         """
         pass
 
-    def game_end_callback(self, game_nr: int):
+    def game_end_callback(self, game_nr: int) -> bool:
         """
         Called when a game ends.
+
+        Returns true if agent wants to early stop.
         """
         pass

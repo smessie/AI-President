@@ -9,8 +9,15 @@ import tensorflow as tf
 
 class PresidentModel:
 
-    def __init__(self, hidden_layers: List[int], gamma: float = 0.9, sample_batch_size: int = 32,
-                 track_training_loss: bool = False, filepath: str = None):
+    def __init__(
+            self,
+            hidden_layers: List[int],
+            gamma: float = 0.9,
+            sample_batch_size: int = 32,
+            track_training_loss: bool = False,
+            filepath: str = None,
+            early_stopping: bool = False
+    ):
         assert len(hidden_layers) > 0, 'At least one hidden layer required'
         self._model = tf.keras.models.Sequential([
             tf.keras.layers.Dense(units=hidden_layers[0], activation='relu', input_dim=13 * 3),
@@ -27,6 +34,7 @@ class PresidentModel:
         self._sample_batch_size = sample_batch_size
         self._track_training_loss = track_training_loss
         self.filepath = filepath if filepath else 'data/results/training_loss.csv'
+        self.early_stopping = early_stopping
 
         if track_training_loss:
             for p in [Path(self.filepath)]:
@@ -40,7 +48,7 @@ class PresidentModel:
         prediction = self._model.predict(input_data)
         return prediction[0]
 
-    def train_model(self, data: List[Union[List[int], int, int, Optional[List[int]]]]):
+    def train_model(self, data: List[Union[List[int], int, int, Optional[List[int]]]]) -> bool:
         sample_batch = random.sample(data, self._sample_batch_size) if self._sample_batch_size < len(data) else data
         states = []
         targets = []
@@ -61,6 +69,10 @@ class PresidentModel:
             # Log training loss values in file to check if they decrease and they are different from infinity/NaN
             with open(self.filepath, 'a+') as file:
                 file.write(f'{",".join(map(str, training_loss))}\n')
+        if self.early_stopping:
+            if training_loss[0] > 1000:
+                return True
+        return False
 
     def save(self, filepath: str):
         # tf.keras.callbacks.ModelCheckpoint(filepath=filepath, save_weights_only=True, verbose=1)
