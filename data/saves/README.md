@@ -188,3 +188,12 @@ Final 1000 batches are with fixed epsilon equal to 1%.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.9   |
+
+## 20
+Based on results of training 1 to 15 we try to guess the best possible parameters.  
+Differs from #19 as this has buffer capacity equal to 2000.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 2000            | 1       | 0.9   |
+
