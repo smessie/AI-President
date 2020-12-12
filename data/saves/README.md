@@ -221,3 +221,11 @@ Early stopping is enabled.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 5       | 0.9   |
+
+## 24
+Based on results of training 1 to 15 we try to guess the best possible parameters.  
+Differs from #21 as this has gamma equal to 0.5.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.5   |
