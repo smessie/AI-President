@@ -51,7 +51,10 @@ class DQLAgent(Agent):
             gamma=gamma,
             sample_batch_size=batch_size,
             track_training_loss=track_training_loss,
-            early_stopping=early_stopping
+            early_stopping=early_stopping,
+            optimizer=optimizer,
+            loss=loss,
+            metrics=metrics
         )
         # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move
         self.replay_buffer: List[Union[List[int], int, int, Optional[List[int]]]] = []

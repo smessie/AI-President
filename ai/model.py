@@ -22,9 +22,9 @@ class PresidentModel:
             metrics=None,
     ):
         if optimizer is None:
-            optimizer = tf.keras.losses.MeanSquaredError()
+            optimizer = tf.keras.optimizers.SGD()
         if loss is None:
-            loss = tf.keras.optimizers.SGD()
+            loss = tf.keras.losses.MeanSquaredError()
         if metrics is None:
             metrics = [tf.keras.metrics.MeanSquaredError()]
 
