@@ -20,8 +20,11 @@ def plot(file):
 
 filename = 'data/saves/%s/results/%s'    # without extension
 
-for i in range(17):
-    plot(filename % (i, 'training_loss'))
+#for i in range(17):
+#    plot(filename % (i, 'training_loss'))
+#
+#plot(filename % (17, 'training_loss-0'))
+#plot(filename % (17, 'training_loss-1'))
 
-plot(filename % (17, 'training_loss-0'))
-plot(filename % (17, 'training_loss-1'))
+for i in range(18, 27):
+    plot(filename % (i, 'training_loss'))
