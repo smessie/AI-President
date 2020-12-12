@@ -229,3 +229,16 @@ Differs from #21 as this has gamma equal to 0.5.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.5   |
+
+## 25
+No lower epselon over time or living reward
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 50         | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
+
+## 26
+No lower epselon over time
+living reward of -0.07, (trying higher one next, lower technically)
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
