@@ -40,7 +40,10 @@ class DQLAgent(Agent):
             track_training_loss: bool = False,
             living_reward: float = -0.01,
             training_mode: bool = True,
-            early_stopping: bool = False
+            early_stopping: bool = False,
+            optimizer=None,
+            loss=None,
+            metrics=None,
     ):
         super().__init__(Player())
         self.model: PresidentModel = PresidentModel(

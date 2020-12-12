@@ -16,8 +16,18 @@ class PresidentModel:
             sample_batch_size: int = 32,
             track_training_loss: bool = False,
             filepath: str = None,
-            early_stopping: bool = False
+            early_stopping: bool = False,
+            optimizer=None,
+            loss=None,
+            metrics=None,
     ):
+        if optimizer is None:
+            optimizer = tf.keras.losses.MeanSquaredError()
+        if loss is None:
+            loss = tf.keras.optimizers.SGD()
+        if metrics is None:
+            metrics = [tf.keras.metrics.MeanSquaredError()]
+
         assert len(hidden_layers) > 0, 'At least one hidden layer required'
         self._model = tf.keras.models.Sequential([
             tf.keras.layers.Dense(units=hidden_layers[0], activation='relu', input_dim=13 * 3),
@@ -26,9 +36,9 @@ class PresidentModel:
         ])
         self._model.summary()
         self._model.compile(
-            loss=tf.keras.losses.MeanSquaredError(),
-            optimizer=tf.keras.optimizers.SGD(),
-            metrics=[tf.keras.metrics.MeanSquaredError()],
+            loss=loss,
+            optimizer=optimizer,
+            metrics=metrics,
         )
         self._gamma = gamma
         self._sample_batch_size = sample_batch_size
