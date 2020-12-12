@@ -241,4 +241,4 @@ No lower epselon over time
 living reward of -0.07, (trying higher one next, lower technically)
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
-| 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
+| 100        | 3             | 0            | 78, 260       | 2000            | 5       | 0.1   |
