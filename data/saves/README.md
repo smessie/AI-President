@@ -270,3 +270,13 @@ living reward off -0.07
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
+
+## 30
+Based on results of training 1 to 15 we try to guess the best possible parameters.  
+Differs from #22 as this has now lower eps over time DISabled.  
+Differs from #23 as Epsilon = 20  
+Early stopping is enabled.  
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 500             | 20      | 0.9   |
