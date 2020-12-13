@@ -33,6 +33,6 @@ filename = 'data/saves/%s/results/%s'    # without extension
 #plot(filename % (17, 'wins-benchmark-0'))
 #plot(filename % (17, 'wins-benchmark-1'))
 
-for i in range(18, 29):
+for i in range(18, 30):
     plot(filename % (i, 'wins-0'))
     plot(filename % (i, 'wins-benchmark'))

@@ -26,5 +26,5 @@ filename = 'data/saves/%s/results/%s'    # without extension
 #plot(filename % (17, 'training_loss-0'))
 #plot(filename % (17, 'training_loss-1'))
 
-for i in range(18, 29):
+for i in range(18, 30):
     plot(filename % (i, 'training_loss'))

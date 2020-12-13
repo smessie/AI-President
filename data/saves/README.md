@@ -266,7 +266,6 @@ living reward off -0.01
 with other loss functions
 loss=tf.keras.losses.MeanAbsoluteError(), 
 metrics=[tf.keras.metrics.MeanAbsoluteError()],
-And set SGD learning rate to 0.1 instead of 0.01
 living reward off -0.07
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
