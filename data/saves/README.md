@@ -232,6 +232,7 @@ Differs from #21 as this has gamma equal to 0.5.
 
 ## 25
 No lower epselon over time or living reward
+
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 50         | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
@@ -239,6 +240,7 @@ No lower epselon over time or living reward
 ## 26
 No lower epselon over time
 living reward of -0.07, (trying higher one next, lower technically)
+
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
@@ -248,6 +250,7 @@ with other loss functions
 loss=tf.keras.losses.MeanSquaredLogarithmicError(), 
 metrics=[tf.keras.metrics.MeanSquaredLogarithmicError()],
 living reward off -0.01
+
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
@@ -258,6 +261,7 @@ loss=tf.keras.losses.MeanSquaredLogarithmicError(),
 metrics=[tf.keras.metrics.MeanSquaredLogarithmicError()],
 And set SGD learning rate to 0.1 instead of 0.01
 living reward off -0.01
+
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
@@ -267,6 +271,7 @@ with other loss functions
 loss=tf.keras.losses.MeanAbsoluteError(), 
 metrics=[tf.keras.metrics.MeanAbsoluteError()],
 living reward off -0.07
+
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
@@ -280,3 +285,11 @@ Early stopping is enabled.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 20      | 0.9   |
+
+## 31
+Based on results of training 1 to 15 we try to guess the best possible parameters.  
+Differs from #21 as this has gamma equal to 0.7.
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.7   |
