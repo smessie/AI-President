@@ -261,3 +261,13 @@ living reward off -0.01
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
+
+## 29
+with other loss functions
+loss=tf.keras.losses.MeanAbsoluteError(), 
+metrics=[tf.keras.metrics.MeanAbsoluteError()],
+And set SGD learning rate to 0.1 instead of 0.01
+living reward off -0.07
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.1   |
