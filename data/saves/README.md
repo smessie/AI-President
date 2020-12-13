@@ -247,7 +247,17 @@ living reward of -0.07, (trying higher one next, lower technically)
 with other loss functions
 loss=tf.keras.losses.MeanSquaredLogarithmicError(), 
 metrics=[tf.keras.metrics.MeanSquaredLogarithmicError()],
-living reward of -0.07, (trying higher one next, lower technically)
+living reward off -0.01
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
+
+## 28
+with other loss functions
+loss=tf.keras.losses.MeanSquaredLogarithmicError(), 
+metrics=[tf.keras.metrics.MeanSquaredLogarithmicError()],
+And set SGD learning rate to 0.1 instead of 0.01
+living reward off -0.01
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
