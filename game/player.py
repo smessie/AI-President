@@ -12,10 +12,11 @@ if TYPE_CHECKING:
 class Player:
     _player_id: int = 0
 
-    def __init__(self):
+    def __init__(self, name: str = None):
         self.hand: List[Card] = []
         self.player_id: int = int(Player._player_id)
         Player._player_id += 1
+        self.player_name = name if name is not None else 'Nameless'
 
     def get_all_possible_moves(self, table: Table, agent: Agent) -> List[List[Card]]:
         possible_moves = [[]] if table.played_cards else []
@@ -27,6 +28,9 @@ class Player:
 
     def get_player_id(self):
         return self.player_id
+
+    def get_player_name(self):
+        return self.player_name
 
     def __eq__(self, other):
         return self.player_id == other.get_player_id()

@@ -35,6 +35,9 @@ class Table:
         self.discard_pile += map(lambda x: x[0], self.played_cards)
         self.played_cards.clear()
 
+        for agent in self.game.agents:
+            agent.trick_end_callback(self, [agent for agent in self.game.agents if agent.player.hand])
+
     def try_move(self, agent: Agent, cards: List[Card]) -> None:
         """
         Take a move from an agent, execute the move on the table and give a reward to the agent.
