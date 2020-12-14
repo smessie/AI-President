@@ -21,7 +21,7 @@ def get_played_value(cards: List[Card]) -> Optional[int]:
 
 
 def print_cards(cards: List[Card]) -> None:
-    card_strings = ['' for _ in range(9)]
+    card_strings = ['' for _ in range(7)]
     for card in cards:
         for i, line in enumerate(card.get_card_strings()):
             card_strings[i] += line

@@ -238,9 +238,12 @@ class President:
                 self.agent_iterator.next()
                 nr_skips += 1
 
+            last_move_final_move: bool = (self.table.last_move() and len(self.table.last_move()[1].player.hand) == 0)
+
             if nr_skips >= len(self.agents) or \
-                    [len(agent.player.hand) == 0 or self.passed_agents[agent] for agent in self.agents].count(True) >= \
-                    len(self.agents)-1:  # everyone except one has finished or passed, end trick.
+                    (not last_move_final_move and
+                     [len(agent.player.hand) == 0 or self.passed_agents[agent] for agent in self.agents].count(True) >=
+                     len(self.agents) - 1):  # everyone except one has finished or passed, end trick.
                 # All agents have no cards left
                 if all(len(agent.player.hand) == 0 for agent in self.agents):
                     return
