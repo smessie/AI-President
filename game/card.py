@@ -94,3 +94,23 @@ class Card:
             f"|       {value} |",
             "└---------┘",
         ]
+
+    def get_card_strings_stripped(self) -> List[str]:
+        value = self.value if self.value < 10 else (
+            'X' if self.value == 10 else (
+                'J' if self.value == 11 else (
+                    'Q' if self.value == 12 else (
+                        'K' if self.value == 13 else (
+                            'A' if self.value == 14 else '2'
+                        )
+                    )
+                )
+            )
+        )
+        return [
+            "┌-----┐ ",
+            f"  |  {value}       |  ",
+            f"  |   {self.suit.get_symbol()}  |  ",
+            f"  |       {value}  |  ",
+            "└-----┘ ",
+        ]
