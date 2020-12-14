@@ -71,4 +71,5 @@ class ConsoleAgent(Agent):
 
     def trick_end_callback(self, table: Table, playing_agents: List[Agent]):
         print(f'{Fore.YELLOW}Let\'s clear the deck. On to the next trick! '
-              f'{", ".join(map(lambda agent: agent.player.get_player_name(), playing_agents))} are still playing.{Fore.RESET}')
+              f'{", ".join(map(lambda agent: agent.player.get_player_name(), playing_agents))} are still playing.'
+              f'{Fore.RESET}')
