@@ -12,8 +12,8 @@ if TYPE_CHECKING:
 
 
 class BasicAgent(Agent):
-    def __init__(self):
-        super().__init__(Player())
+    def __init__(self, player_name: str = None):
+        super().__init__(Player(player_name if player_name is not None else 'BasicAgent'))
 
     def make_move(self, table: Table) -> None:
         """

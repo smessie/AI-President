@@ -111,12 +111,11 @@ class President:
             # A Pass, disable the player for this round
             self.passed_agents[agent] = True
             #  print('Player passed')
-            self.temp_memory[agent].append([
-                input_vector,
-                calculated_move,
-                0,
-                None
-            ])
+            self.temp_memory[agent].append([input_vector, calculated_move, 0, None])
+
+            for cb_agent in self.agents:
+                cb_agent.move_played_callback([], agent.player)
+
             if self.verbose:
                 print(f'Player {agent.player.player_id} has passed.')
             return None
@@ -126,12 +125,11 @@ class President:
             # WARNING: when playing with 2 decks of cards this is not sufficient.
             if not all(card in agent.player.hand for card in cards):
                 self.passed_agents[agent] = True
-                self.temp_memory[agent].append([
-                    input_vector,
-                    calculated_move,
-                    -10,
-                    None
-                ])
+                self.temp_memory[agent].append([input_vector, calculated_move, -10, None])
+
+                for cb_agent in self.agents:
+                    cb_agent.move_played_callback([], agent.player)
+
                 if self.verbose:
                     print(f'Player {agent.player.player_id} can\'t make move and is forced to pass.')
                 return None
@@ -140,12 +138,10 @@ class President:
         if self.valid_move(cards, agent, debug=False):
             self.table.do_move(agent, cards)
 
-            self.temp_memory[agent].append([
-                input_vector,
-                calculated_move,
-                0,
-                None
-            ])
+            self.temp_memory[agent].append([input_vector, calculated_move, 0, None])
+
+            for cb_agent in self.agents:
+                cb_agent.move_played_callback(cards, agent.player)
 
             if self.verbose:
                 print(f'Player {agent.player.player_id} makes move and has {len(agent.player.hand)} cards left:')
@@ -154,12 +150,11 @@ class President:
         else:
             self.passed_agents[agent] = True
 
-            self.temp_memory[agent].append([
-                input_vector,
-                calculated_move,
-                -10,
-                None
-            ])
+            self.temp_memory[agent].append([input_vector, calculated_move, -10, None])
+
+            for cb_agent in self.agents:
+                cb_agent.move_played_callback([], agent.player)
+
             if self.verbose:
                 print(f'Player {agent.player.player_id} plays invalid move and is forced to pass.')
 

@@ -39,3 +39,15 @@ class Agent:
         Returns true if agent wants to early stop.
         """
         pass
+
+    def move_played_callback(self, move: List[Card], player: Player):
+        """
+        Called when any player makes a move.
+        """
+        pass
+
+    def trick_end_callback(self, table: Table, playing_agents: List[Agent]):
+        """
+        Called when trick is ended and new one begins.
+        """
+        pass

@@ -44,8 +44,9 @@ class DQLAgent(Agent):
             optimizer=None,
             loss=None,
             metrics=None,
+            player_name: str = None,
     ):
-        super().__init__(Player())
+        super().__init__(Player(player_name if player_name is not None else 'DQLAgent'))
         self.model: PresidentModel = PresidentModel(
             hidden_layers=hidden_layers,
             gamma=gamma,
