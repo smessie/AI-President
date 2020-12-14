@@ -19,7 +19,7 @@ def print_whitespace():
 
 class ConsoleAgent(Agent):
     def __init__(self, player_name: str = None):
-        super().__init__(Player(player_name if player_name is not None and player_name is not '' else 'ConsoleAgent'))
+        super().__init__(Player(player_name if player_name is not None and player_name != '' else 'ConsoleAgent'))
 
     def make_move(self, table: Table) -> None:
         print_whitespace()
