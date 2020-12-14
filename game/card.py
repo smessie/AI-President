@@ -1,6 +1,11 @@
 import enum
 from typing import List
 
+from colorama import Fore, Back, Style, init
+
+
+init()  # Required for colorama
+
 
 class Color(enum.Enum):
     Black = 1
@@ -85,12 +90,13 @@ class Card:
                 )
             )
         )
+        color = Fore.RED if self.suit.get_color() == Color.Red else Fore.BLACK
         return [
-            "┌---------┐",
-            f"| {value}       |",
-            "|         |",
-            f"|    {self.suit.get_symbol()}    |",
-            "|         |",
-            f"|       {value} |",
-            "└---------┘",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}┌---------┐{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}| {value}       |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|         |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|    {self.suit.get_symbol()}    |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|         |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|       {value} |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}└---------┘{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
         ]
