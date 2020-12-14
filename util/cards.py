@@ -31,7 +31,7 @@ def print_cards(cards: List[Card]) -> None:
 
 def print_cards_string(cards: List[Card]) -> str:
     result = ''
-    card_strings = ['' for _ in range(7)]
+    card_strings = ['' for _ in range(5)]
     for card in cards:
         for i, line in enumerate(card.get_card_strings_stripped()):
             card_strings[i] += line
