@@ -1,8 +1,7 @@
 import enum
 from typing import List
 
-from colorama import Fore, Back, Style, init
-
+from colorama import Back, Fore, Style, init
 
 init()  # Required for colorama
 

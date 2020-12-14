@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 
-from colorama import Fore, Back, Style, init
+from colorama import Back, Fore, Style, init
 
 from game.agent import Agent
 from game.player import Player
