@@ -95,7 +95,8 @@ class Card:
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}┌---------┐{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}| {value}       |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|         |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
-            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|    {self.suit.get_symbol()}    |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
+            f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|    {self.suit.get_symbol()}    |{Fore.RESET}{Back.RESET}"
+            f"{Style.NORMAL} ",
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|         |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}|       {value} |{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}└---------┘{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
