@@ -10,7 +10,12 @@ Untrained agent
 | (/) 20     | 2             | 1            | 78, 260       | (/) 2000        | (/) 5   | 0.9   |
 
 ## 0
+500 games with 20 rounds each.
+Epsilon = 0
 
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 50         | 0             | 3            | 78, 260       | 2000            | 0       | 0.9   |
 
 ## 1
 1000 games with 10 rounds each.
