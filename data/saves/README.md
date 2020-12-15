@@ -307,3 +307,12 @@ Rerun of #1.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 100, 300      | 2000            | 0       | 0.9   |
+
+## 33
+Basicagent looks like it yields better result, so training on basic agents
+250 games with 20 rounds each.  
+Rerun of #15  
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
