@@ -29,4 +29,4 @@ if __name__ == "__main__":
     ])
 
     # Start the game
-    game.play(250, 20)
+    game.play(250, 20, 0)

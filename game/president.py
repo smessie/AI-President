@@ -37,13 +37,13 @@ class President:
             self.temp_memory[agent] = []
         self.verbose = verbose
 
-    def play(self, games: int, rounds: int) -> None:
+    def play(self, games: int, rounds: int, start_at_game: int = 0) -> None:
         """
         Start the game. Play a certain amount of games each consisting of a certain amount of rounds.
         """
         progress = tqdm(total=games * rounds)
 
-        for g in range(games):
+        for g in range(start_at_game, games):
             for r in range(rounds):
                 # Update the progress bar
                 progress.set_description(
