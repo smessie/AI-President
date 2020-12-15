@@ -31,7 +31,7 @@ class DiscordAgent(Agent):
         possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
         for i, move in enumerate(possible_moves):
             to_print += f'Move {i}:\n'
-            move_string = print_cards_string(move)
+            move_string = 'PASS\n\n' if move == [] else print_cards_string(move)
             if len(to_print) + len(move_string) > 1950:
                 self.discord_bot.print(to_print)
                 to_print = ''
@@ -72,7 +72,7 @@ class DiscordAgent(Agent):
         self.print_whitespace()
         self.discord_bot.print('Aww, the game is already over :(')
         keep_playing = self.discord_bot.read_bool_input('Lets play another game? (y/n)')
-        return keep_playing
+        return not keep_playing
 
     def trick_end_callback(self, table: Table, playing_agents: List[Agent]):
         self.discord_bot.print(f'Let\'s clear the deck. On to the next trick! '

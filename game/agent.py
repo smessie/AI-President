@@ -38,7 +38,7 @@ class Agent:
 
         Returns true if agent wants to early stop.
         """
-        pass
+        return False
 
     def move_played_callback(self, move: List[Card], player: Player):
         """
