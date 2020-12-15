@@ -38,7 +38,7 @@ class DiscordAgent(Agent):
             to_print += move_string
 
         to_print += 'Your cards:\n'
-        move_string = print_cards_string(self.player.hand)
+        move_string = print_cards_string(sorted(self.player.hand, key=lambda x: x.value))
         if len(to_print) + len(move_string) > 1950:
             self.discord_bot.print(to_print)
             to_print = ''
