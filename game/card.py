@@ -115,8 +115,8 @@ class Card:
         )
         return [
             "┌-----┐ ",
-            f"  |  {value}       |  ",
-            f"  |   {self.suit.get_symbol()}  |  ",
-            f"  |       {value}  |  ",
+            f"| {value}   | ",
+            f"|  {self.suit.get_symbol()}  | ",
+            f"|   {value} | ",
             "└-----┘ ",
         ]

@@ -31,10 +31,18 @@ class DiscordAgent(Agent):
         possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
         for i, move in enumerate(possible_moves):
             to_print += f'Move {i}:\n'
-            to_print += print_cards_string(move)
+            move_string = print_cards_string(move)
+            if len(to_print) + len(move_string) > 1950:
+                self.discord_bot.print(to_print)
+                to_print = ''
+            to_print += move_string
 
         to_print += 'Your cards:\n'
-        to_print += print_cards_string(self.player.hand)
+        move_string = print_cards_string(self.player.hand)
+        if len(to_print) + len(move_string) > 1950:
+            self.discord_bot.print(to_print)
+            to_print = ''
+        to_print += move_string
         self.discord_bot.print(to_print)
 
         move = self.discord_bot.read_int_input('Enter move_nr to take: ')
