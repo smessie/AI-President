@@ -298,3 +298,12 @@ Differs from #21 as this has gamma equal to 0.7.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 500             | 1       | 0.7   |
+
+## 32
+1000 games with 10 rounds each.
+Epsilon = 0  
+Rerun of #1.  
+
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 3            | 100, 300      | 2000            | 0       | 0.9   |
