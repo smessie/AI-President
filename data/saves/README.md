@@ -70,7 +70,6 @@ More different rewards. Change also kept for further trainings.
 | 50         | 3             | 0            | 78, 260       | 2000            | 20      | 0.9   |
 
 ## 7
-### TODO: Rerun this training, we had wrong results before
 250 games with 20 rounds each.
 Epsilon = 20
 One larger hidden layer
