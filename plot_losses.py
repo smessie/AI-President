@@ -32,3 +32,4 @@ for i in range(18, 30):
 plot('data/saves/34/results/training_loss')
 plot('data/saves/10-bis/results/training_loss')
 plot('data/saves/35/after-1-game/results/training_loss')
+plot('data/saves/35/after-2-games/results/training_loss')

@@ -45,3 +45,6 @@ plot('data/saves/10-bis/results/wins-benchmark')
 
 plot('data/saves/35/after-1-game/results/wins-0')
 plot('data/saves/35/after-1-game/results/wins-benchmark')
+
+plot('data/saves/35/after-2-games/results/wins-0')
+plot('data/saves/35/after-2-games/results/wins-benchmark')

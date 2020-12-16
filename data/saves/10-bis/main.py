@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
+import tensorflow as tf
+
 from agents.basic_agent import BasicAgent
+from agents.console_agent import ConsoleAgent
 from agents.dql_agent import DQLAgent
 from agents.random_agent import RandomAgent
-from agents.console_agent import ConsoleAgent
 from game.president import President
-
-import tensorflow as tf
 
 if __name__ == "__main__":
     game = President([
