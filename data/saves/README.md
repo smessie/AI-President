@@ -316,6 +316,13 @@ Rerun of #15
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 0             | 3            | 78, 260       | 2000            | 5       | 0.9   |
 
+## 34
+Smaller network stopped when loss started climbing
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 1             | 2            | 78            | 2000            | 20      | 0.9   |
+
+
 ## 35
 DiscordAgent results against a human player.  
 Living reward of -0.01 but no lower eps over time.  
