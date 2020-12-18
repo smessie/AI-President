@@ -330,3 +330,20 @@ Living reward of -0.01 but no lower eps over time.
 | Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
 | -----------|---------------|--------------|---------------|-----------------|---------| ----- |
 | 100        | 1             | 1            | 78, 260       | 2000            | 5       | 0.9   |
+
+## 36
+Training met 4 DQL agents.
+
+Gebruiken volgende agent als basis:
+
+Met living reward van -0.01
+| Batch size | random agents | basic agents | hidden layers | buffer capacity | epsilon | Gamma |
+| -----------|---------------|--------------|---------------|-----------------|---------| ----- |
+| 100        | 0             | 0            | 78, 260       | 2000            | 5       | 0.9   |
+
+Elke agent heeft een lichte aanpassing hierop:
+
+|**Agent:**     |0      |1      |2  |3   |
+|---------------|-------|-------|---|----|
+|buffer capacity|2000   |500    |500|2000|
+|hidden layers  |78, 260|78, 260|78 |78  |

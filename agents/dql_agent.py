@@ -47,11 +47,13 @@ class DQLAgent(Agent):
             player_name: str = None,
     ):
         super().__init__(Player(player_name if player_name is not None else 'DQLAgent'))
+        print(f'Player {self.player.get_player_id()} is {hidden_layers},{buffer_capacity}')
         self.model: PresidentModel = PresidentModel(
             hidden_layers=hidden_layers,
             gamma=gamma,
             sample_batch_size=batch_size,
             track_training_loss=track_training_loss,
+            filepath=f'data/results/training_loss-{self.player.get_player_id()}.csv',
             early_stopping=early_stopping,
             optimizer=optimizer,
             loss=loss,

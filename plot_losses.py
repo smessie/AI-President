@@ -26,11 +26,14 @@ filename = 'data/saves/%s/results/%s'    # without extension
 # plot(filename % (17, 'training_loss-0'))
 # plot(filename % (17, 'training_loss-1'))
 
-for i in range(18, 30):
-    plot(filename % (i, 'training_loss'))
+#for i in range(18, 30):
+#    plot(filename % (i, 'training_loss'))
+#
+#plot('data/saves/34/results/training_loss')
+#plot('data/saves/10-bis/results/training_loss')
+#plot('data/saves/35/after-1-game/results/training_loss')
+#for i in range(2, 6):
+#    plot(f'data/saves/35/after-{i}-games/results/training_loss')
 
-plot('data/saves/34/results/training_loss')
-plot('data/saves/10-bis/results/training_loss')
-plot('data/saves/35/after-1-game/results/training_loss')
-for i in range(2, 6):
-    plot(f'data/saves/35/after-{i}-games/results/training_loss')
+for i in range(4):
+    plot(plot(filename % (36, f'training_loss-{i}')))

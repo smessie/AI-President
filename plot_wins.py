@@ -33,19 +33,23 @@ filename = 'data/saves/%s/results/%s'    # without extension
 # plot(filename % (17, 'wins-benchmark-0'))
 # plot(filename % (17, 'wins-benchmark-1'))
 
-for i in range(18, 30):
-    plot(filename % (i, 'wins-0'))
-    plot(filename % (i, 'wins-benchmark'))
+#for i in range(18, 30):
+#    plot(filename % (i, 'wins-0'))
+#    plot(filename % (i, 'wins-benchmark'))
+#
+#plot('data/saves/34/results/wins-0')
+#plot('data/saves/34/results/wins-benchmark')
+#
+#plot('data/saves/10-bis/results/wins-0')
+#plot('data/saves/10-bis/results/wins-benchmark')
+#
+#plot('data/saves/35/after-1-game/results/wins-0')
+#plot('data/saves/35/after-1-game/results/wins-benchmark')
+#
+#for i in range(2, 6):
+#    plot(f'data/saves/35/after-{i}-games/results/wins-0')
+#    plot(f'data/saves/35/after-{i}-games/results/wins-benchmark')
 
-plot('data/saves/34/results/wins-0')
-plot('data/saves/34/results/wins-benchmark')
-
-plot('data/saves/10-bis/results/wins-0')
-plot('data/saves/10-bis/results/wins-benchmark')
-
-plot('data/saves/35/after-1-game/results/wins-0')
-plot('data/saves/35/after-1-game/results/wins-benchmark')
-
-for i in range(2, 6):
-    plot(f'data/saves/35/after-{i}-games/results/wins-0')
-    plot(f'data/saves/35/after-{i}-games/results/wins-benchmark')
+for i in range(4):
+    plot(plot(filename % (36, f'wins-{i}')))
+    plot(plot(filename % (36, f'wins-benchmark-{i}')))
