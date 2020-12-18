@@ -32,8 +32,22 @@ class Agent:
         """
         pass
 
-    def game_end_callback(self, game_nr: int):
+    def game_end_callback(self, game_nr: int) -> bool:
         """
         Called when a game ends.
+
+        Returns true if agent wants to early stop.
+        """
+        return False
+
+    def move_played_callback(self, move: List[Card], player: Player):
+        """
+        Called when any player makes a move.
+        """
+        pass
+
+    def trick_end_callback(self, table: Table, playing_agents: List[Agent]):
+        """
+        Called when trick is ended and new one begins.
         """
         pass

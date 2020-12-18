@@ -12,14 +12,14 @@ if TYPE_CHECKING:
 
 
 class BasicAgent(Agent):
-    def __init__(self):
-        super().__init__(Player())
+    def __init__(self, player_name: str = None):
+        super().__init__(Player(player_name if player_name is not None else 'BasicAgent'))
 
     def make_move(self, table: Table) -> None:
         """
         Agent makes a move based on the fact that the hand played has the lowest possible value.
         """
-        possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table)
+        possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
 
         smallest_move = possible_moves[0]
         smallest_move_value: Optional[int] = get_played_value(smallest_move)

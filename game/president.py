@@ -1,11 +1,14 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple
+from itertools import chain
+from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple, Union
 
+import numpy as np
 from tqdm import tqdm
 
+from ai.representation_mapper import map_cards_to_action, map_cards_to_vector
 from game.table import Table
-from util.cards import get_played_value
+from util.cards import get_played_value, print_cards
 from util.iterator import CustomIterator
 
 if TYPE_CHECKING:
@@ -18,7 +21,7 @@ class President:
     A class containing the game logic.
     """
 
-    def __init__(self, agents: List[Agent]):
+    def __init__(self, agents: List[Agent], verbose: bool = False):
         self.agents: List[Agent] = agents
         self.passed_agents: Dict[Agent, bool] = {
             agent: False for agent in self.agents
@@ -27,13 +30,20 @@ class President:
         self.agent_iterator: CustomIterator = CustomIterator(agents)
         self.table = Table(self)
 
-    def play(self, games: int, rounds: int) -> None:
+        # Dict[player/agent,
+        # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move]
+        self.temp_memory: Dict[Agent, List[Union[List[int], int, int, Optional[List[int]]]]] = {}
+        for agent in agents:
+            self.temp_memory[agent] = []
+        self.verbose = verbose
+
+    def play(self, games: int, rounds: int, start_at_game: int = 0) -> None:
         """
         Start the game. Play a certain amount of games each consisting of a certain amount of rounds.
         """
         progress = tqdm(total=games * rounds)
 
-        for g in range(games):
+        for g in range(start_at_game, games):
             for r in range(rounds):
                 # Update the progress bar
                 progress.set_description(
@@ -60,40 +70,99 @@ class President:
                 for agent in self.agents:
                     agent.round_end_callback(self.agent_finish_order, self.table)
 
+                if self.verbose:
+                    print(f'End order: {list(map(lambda x: x.player.player_id, self.agent_finish_order))}')
+                    print('-' * 40)
+
+                self.reset_temp_memory()
+
+            triggered_early_stopping = False
             for agent in self.agents:
-                agent.game_end_callback(g)
+                triggered_early_stopping = agent.game_end_callback(g) or triggered_early_stopping
+            if triggered_early_stopping:
+                break
 
         progress.close()
 
-    def on_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
+    # flake8: noqa: C901
+    def on_move(self, agent: Agent, cards: List[Card]) -> None:
         """
         Handle move from Agent, We can be sure the agent can actually play the card.
-        return (reward, is_final).
         """
+        # Save the move to memory to add to our network at the end of the game.
+        cards_in_hand_vector: List[int] = map_cards_to_vector(agent.player.hand)
+        cards_previous_move_vector: List[int] = map_cards_to_vector(
+            self.table.last_move()[0] if self.table.last_move() else [])
+        all_played_cards_vector: List[int] = map_cards_to_vector(
+            list(chain.from_iterable([*map(lambda x: x[0], self.table.played_cards), *self.table.discard_pile])))
+
+        input_vector = \
+            np.array(cards_in_hand_vector + cards_previous_move_vector + all_played_cards_vector)[np.newaxis, :]
+
+        if self.temp_memory[agent]:  # Set next state of previous move
+            self.temp_memory[agent][-1][3] = input_vector
+
+        calculated_move: int = map_cards_to_action(cards)
+
+        if self.verbose:
+            print('-' * 40)
+
         if not cards:
             # A Pass, disable the player for this round
             self.passed_agents[agent] = True
             #  print('Player passed')
-            return -5, False  # TODO fix reward
+            self.temp_memory[agent].append([input_vector, calculated_move, 0, None])
+
+            for cb_agent in self.agents:
+                cb_agent.move_played_callback([], agent.player)
+
+            if self.verbose:
+                print(f'Player {agent.player.player_id} has passed.')
+            return None
 
         # A pass is a valid move.
         if len(cards) != 0:
             # WARNING: when playing with 2 decks of cards this is not sufficient.
             if not all(card in agent.player.hand for card in cards):
                 self.passed_agents[agent] = True
-                # print('Player can\'t make move')
-                return -10, False
+                self.temp_memory[agent].append([input_vector, calculated_move, -10, None])
+
+                for cb_agent in self.agents:
+                    cb_agent.move_played_callback([], agent.player)
+
+                if self.verbose:
+                    print(f'Player {agent.player.player_id} can\'t make move and is forced to pass.')
+                return None
 
         # Previous value should be lower
-        if self.valid_move(cards, debug=False):
-            # print('OK')
+        if self.valid_move(cards, agent, debug=False):
             self.table.do_move(agent, cards)
-            return 10, False  # TODO fix reward
+
+            self.temp_memory[agent].append([input_vector, calculated_move, 0, None])
+
+            for cb_agent in self.agents:
+                cb_agent.move_played_callback(cards, agent.player)
+
+            if self.verbose:
+                print(f'Player {agent.player.player_id} makes move and has {len(agent.player.hand)} cards left:')
+                print_cards(cards)
+            return None
         else:
             self.passed_agents[agent] = True
-            return -10, False  # TODO fix reward
 
-    def valid_move(self, cards: List[Card], debug=False) -> bool:
+            self.temp_memory[agent].append([input_vector, calculated_move, -10, None])
+
+            for cb_agent in self.agents:
+                cb_agent.move_played_callback([], agent.player)
+
+            if self.verbose:
+                print(f'Player {agent.player.player_id} plays invalid move and is forced to pass.')
+
+            # punish at the end? => -0.01 from final reward per illegal move
+            # Save move to memory when illegal-> with negative reward in already existing self.temp_memory[-1]?
+            return None
+
+    def valid_move(self, cards: List[Card], agent: Agent, debug=False) -> bool:
 
         last_move: Tuple[List[Card], Agent] = self.table.last_move()
 
@@ -101,6 +170,17 @@ class President:
         if cards and last_move and len(cards) < len(last_move[0]):
             if debug:
                 print('Not enough cards')
+            return False
+
+        # Check that the agent does not remain with only twos in his hand.
+        remaining_cards = agent.player.hand[:]
+        for card in cards:
+            remaining_cards.remove(card)
+        only_twos_remain: bool = True
+        for card in remaining_cards:
+            if card.get_value() != 15:
+                only_twos_remain = False
+        if only_twos_remain and len(remaining_cards) != 0:
             return False
 
         # Check that each played card in the trick has the same rank, or if not, it is a 2.
@@ -125,7 +205,7 @@ class President:
         self.table.reset()
 
     def _exchange_cards(self) -> None:
-        # Todo discuss this, but for now only the first and last player trade cards
+        # For now only the first and last player trade cards as this should not directly affect the learning.
         first: Agent = self.agent_finish_order[0]
         last: Agent = self.agent_finish_order[-1]
         preferred_cards: List[Card] = first.get_preferred_card_order(self.table)
@@ -158,7 +238,12 @@ class President:
                 self.agent_iterator.next()
                 nr_skips += 1
 
-            if nr_skips > len(self.agents):
+            last_move_final_move: bool = (self.table.last_move() and len(self.table.last_move()[1].player.hand) == 0)
+
+            if nr_skips >= len(self.agents) or \
+                    (not last_move_final_move and
+                     [len(agent.player.hand) == 0 or self.passed_agents[agent] for agent in self.agents].count(True) >=
+                     len(self.agents) - 1):  # everyone except one has finished or passed, end trick.
                 # All agents have no cards left
                 if all(len(agent.player.hand) == 0 for agent in self.agents):
                     return
@@ -181,3 +266,7 @@ class President:
             yield self.agent_iterator.get()
         # The unfinished player comes last, add it to the last_played lis
         self.agent_finish_order.append(list(filter(lambda x: len(x.player.hand) > 0, self.agents))[0])
+
+    def reset_temp_memory(self):
+        for agent in self.agents:
+            self.temp_memory[agent] = []

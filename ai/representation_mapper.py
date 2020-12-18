@@ -47,3 +47,20 @@ def map_action_to_cards(action: int, hand: List[Card]) -> Optional[List[Card]]:
     card_value: int = action % 12
     vector = [0 if i != card_value else amount_of_specific_cards for i in range(12)] + [amount_of_twos]
     return map_vector_to_cards(vector, hand)
+
+
+def map_cards_to_action(cards: List[Card]) -> int:
+    vector: List[int] = map_cards_to_vector(cards)
+    amount_of_twos: int = vector[-1]
+    amount_of_specific_cards: int = 0
+    card_value: int = -1
+    for value, amount in enumerate(vector[:-1]):
+        if amount != 0:
+            assert card_value == -1, 'cannot map illegal move to action'
+            card_value = value
+            amount_of_specific_cards = amount
+    if card_value == -1:
+        assert amount_of_twos == 0, 'cannot map only twos to action'
+        return 240  # pass
+    action: int = (amount_of_specific_cards - 1) * 12 + amount_of_twos * 48 + card_value
+    return action
