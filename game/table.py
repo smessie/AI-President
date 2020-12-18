@@ -32,28 +32,22 @@ class Table:
         """
         Move the cards from the played_cards to the discard_pile.
         """
-        self.discard_pile += self.played_cards
+        self.discard_pile += map(lambda x: x[0], self.played_cards)
         self.played_cards.clear()
 
-    def try_move(self, agent: Agent, cards: List[Card]) -> Tuple[int, bool]:
+        for agent in self.game.agents:
+            agent.trick_end_callback(self, [agent for agent in self.game.agents if agent.player.hand])
+
+    def try_move(self, agent: Agent, cards: List[Card]) -> None:
         """
         Take a move from an agent, execute the move on the table and give a reward to the agent.
         Validate if the move is valid first.
+        Temporary reward is directly stored in game's temp memory.
 
-        TODO: discuss this.
-        TODO: move rewards to settings file.
         Reward scheme:
-        - Invalid move: -10
-        - else return game specific reward
-
-        return the reward and if the move is final.
+        - Invalid move: -10 (pre-filtered for valid move so should not happen.)
+        - else return game specific reward in temp memory.
         """
-        # A pass is a valid move.
-        if len(cards) != 0:
-            # WARNING: when playing with 2 decks of cards this is not sufficient.
-            if not all(card in agent.player.hand for card in cards):
-                return -10, False
-
         return self.game.on_move(agent, cards)
 
     def do_move(self, agent: Agent, cards: List[Card]) -> None:

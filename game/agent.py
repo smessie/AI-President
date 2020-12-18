@@ -25,3 +25,29 @@ class Agent:
         Function used by President to exchange cards at the beginning of a round. Most wanted card should be in front.
         """
         return sorted(table.deck.card_stack, reverse=True)
+
+    def round_end_callback(self, agent_finish_order: List[Agent], table: Table):
+        """
+        Called when a round ends.
+        """
+        pass
+
+    def game_end_callback(self, game_nr: int) -> bool:
+        """
+        Called when a game ends.
+
+        Returns true if agent wants to early stop.
+        """
+        return False
+
+    def move_played_callback(self, move: List[Card], player: Player):
+        """
+        Called when any player makes a move.
+        """
+        pass
+
+    def trick_end_callback(self, table: Table, playing_agents: List[Agent]):
+        """
+        Called when trick is ended and new one begins.
+        """
+        pass
