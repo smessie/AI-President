@@ -35,6 +35,21 @@ class DiscordBot(discord.Client):
         if self.waiting_for_input and self.input_message is None:
             self.input_message = message.content
 
+    def read_string_input(self, message: str) -> str:
+        self.waiting_for_input = True
+        self.print_queue.append(message)
+
+        message = None
+        while message is None:
+            while self.input_message is None:
+                # Wait
+                pass
+            if self.input_message is not None:
+                message = self.input_message
+        self.waiting_for_input = False
+        self.input_message = None
+        return message
+
     def read_int_input(self, message: str) -> int:
         self.waiting_for_input = True
         self.print_queue.append(message)

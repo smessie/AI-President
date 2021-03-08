@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import TYPE_CHECKING, List, Optional
 
 if TYPE_CHECKING:
@@ -18,6 +19,29 @@ def get_played_value(cards: List[Card]) -> Optional[int]:
                 return -1
             played_value = card.value
     return played_value
+
+
+def match_move(input_move: str, possible_moves: List[List[Card]]) -> Optional[List[Card]]:
+    if input_move == "0" and [] in possible_moves:
+        return []
+    if re.match('^[02-9XJQKA]+$', input_move) is None:
+        return None
+    cards = list(input_move)
+    size = len(cards)
+    for move in possible_moves:
+        matching_cards = cards[:]
+        if size == len(move):
+            skip = False
+            for card in move:
+                char_value: str = card.get_char_value()
+                if char_value in matching_cards:
+                    matching_cards.remove(char_value)
+                else:
+                    skip = True
+                    break
+            if not skip:
+                return move
+    return None
 
 
 def print_cards(cards: List[Card]) -> None:

@@ -77,8 +77,8 @@ class Card:
     def __repr__(self):
         return self.name
 
-    def get_card_strings(self) -> List[str]:
-        value = self.value if self.value < 10 else (
+    def get_char_value(self) -> str:
+        return str(self.value) if self.value < 10 else (
             'X' if self.value == 10 else (
                 'J' if self.value == 11 else (
                     'Q' if self.value == 12 else (
@@ -89,6 +89,9 @@ class Card:
                 )
             )
         )
+
+    def get_card_strings(self) -> List[str]:
+        value = self.get_char_value()
         color = Fore.RED if self.suit.get_color() == Color.Red else Fore.BLACK
         return [
             f"{color}{Back.LIGHTWHITE_EX}{Style.BRIGHT}┌---------┐{Fore.RESET}{Back.RESET}{Style.NORMAL} ",
@@ -102,17 +105,7 @@ class Card:
         ]
 
     def get_card_strings_stripped(self) -> List[str]:
-        value = self.value if self.value < 10 else (
-            'X' if self.value == 10 else (
-                'J' if self.value == 11 else (
-                    'Q' if self.value == 12 else (
-                        'K' if self.value == 13 else (
-                            'A' if self.value == 14 else '2'
-                        )
-                    )
-                )
-            )
-        )
+        value = self.get_char_value()
         return [
             "┌-----┐ ",
             f"| {value}   | ",

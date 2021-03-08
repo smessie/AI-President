@@ -8,7 +8,7 @@ from discordbot.discord_bot import DiscordBot
 from game.agent import Agent
 from game.player import Player
 from game.table import Table
-from util.cards import print_cards_string
+from util.cards import match_move, print_cards_string
 
 if TYPE_CHECKING:
     from game.card import Card
@@ -29,13 +29,6 @@ class DiscordAgent(Agent):
 
         to_print = ''
         possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
-        for i, move in enumerate(possible_moves):
-            to_print += f'Move {i}:\n'
-            move_string = 'PASS\n\n' if move == [] else print_cards_string(move)
-            if len(to_print) + len(move_string) > 1950:
-                self.discord_bot.print(to_print)
-                to_print = ''
-            to_print += move_string
 
         to_print += 'Your cards:\n'
         move_string = print_cards_string(sorted(self.player.hand, key=lambda x: x.value))
@@ -45,11 +38,11 @@ class DiscordAgent(Agent):
         to_print += move_string
         self.discord_bot.print(to_print)
 
-        move = self.discord_bot.read_int_input('Enter move_nr to take: ')
-        while not 0 <= move < len(possible_moves):
-            self.discord_bot.print(f'Move {move} is invalid! Try again.')
-            move = self.discord_bot.read_int_input('Enter move_nr to take: ')
-        table.try_move(self, possible_moves[move])
+        move = match_move(self.discord_bot.read_string_input('Enter move to take: '), possible_moves)
+        while move is None:
+            self.discord_bot.print('Move is invalid! Try again. (Enter 0 to pass)')
+            move = match_move(self.discord_bot.read_string_input('Enter move to take: '), possible_moves)
+        table.try_move(self, move)
 
     def move_played_callback(self, move: List[Card], player: Player):
         if move:
