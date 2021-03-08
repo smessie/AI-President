@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from agents.basic_agent import BasicAgent
+from agents.better_agent import BetterAgent
 from agents.discord_agent import DiscordAgent
 from agents.dql_agent import DQLAgent
 from agents.random_agent import RandomAgent
@@ -24,8 +24,8 @@ if __name__ == "__main__":
             ) for _ in range(1)
         ),
         *(DiscordAgent() for _ in range(1)),
-        *(RandomAgent(f'Randy {i+1}') for i in range(1)),
-        *(BasicAgent(f'Basy {i+1}') for i in range(1))
+        *(RandomAgent(f'Randy {i + 1}') for i in range(1)),
+        *(BetterAgent(f'Betty {i + 1}') for i in range(1))
     ])
 
     # Start the game
