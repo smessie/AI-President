@@ -2,7 +2,6 @@
 
 from agents.basic_agent import BasicAgent
 from agents.dql_agent import DQLAgent
-from agents.random_agent import RandomAgent
 from game.president import President
 
 if __name__ == "__main__":
@@ -24,4 +23,4 @@ if __name__ == "__main__":
     ])
 
     # Start the game
-    game.play(250, 20)
+    await game.play(250, 20)

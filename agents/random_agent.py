@@ -15,7 +15,7 @@ class RandomAgent(Agent):
     def __init__(self, player_name: str = None):
         super().__init__(Player(player_name if player_name is not None else 'RandomAgent'))
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         """
         Let the agent make a random move from all possible moves in his state.
         """

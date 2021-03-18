@@ -17,4 +17,4 @@ if __name__ == "__main__":
     ])
 
     # Start the game
-    game.play(500, 20)
+    await game.play(500, 20)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 
-from colorama import Back, Fore, Style, init
+from colorama import Fore, Style, init
 
 from game.agent import Agent
 from game.player import Player
@@ -11,7 +11,6 @@ from util.cards import print_cards
 
 if TYPE_CHECKING:
     from game.card import Card
-
 
 init()  # Required for colorama
 
@@ -26,7 +25,7 @@ class ConsoleAgent(Agent):
     def __init__(self, player_name: str = None):
         super().__init__(Player(player_name if player_name is not None and player_name != '' else 'ConsoleAgent'))
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         print_whitespace()
 
         possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
@@ -58,10 +57,10 @@ class ConsoleAgent(Agent):
             prefix = ''
             if agent == self:
                 prefix = f"{Fore.BLUE}"
-            print(f'{prefix}#{i+1}. {agent.player.get_player_name()}{Fore.RESET}')
+            print(f'{prefix}#{i + 1}. {agent.player.get_player_name()}{Fore.RESET}')
         print_whitespace()
 
-    def game_end_callback(self, game_nr: int) -> bool:
+    async def game_end_callback(self, game_nr: int) -> bool:
         print_whitespace()
         print('Aww, the game is already over :(')
         keep_playing = input('Lets play another game? (y/n)').lower().strip()

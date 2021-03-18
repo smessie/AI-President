@@ -15,7 +15,7 @@ class BetterAgent(Agent):
     def __init__(self, player_name: str = None):
         super().__init__(Player(player_name if player_name is not None else 'BetterAgent'))
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         """
         Agent makes a move based on the fact that the hand played has the lowest possible value.
         """
@@ -30,7 +30,8 @@ class BetterAgent(Agent):
             move_size: int = len(move)
             if move_value and move_value > 0 and (not best_move_value or (
                     move_value < 10 and move_size > best_move_size) or (
-                    move_value < best_move_value and move_size >= best_move_size)) and (
+                                                          move_value < best_move_value
+                                                          and move_size >= best_move_size)) and (
                     hand_size < 7 or 15 not in [card.value for card in move]):
                 best_move_value = move_value
                 best_move = move

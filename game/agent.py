@@ -13,7 +13,7 @@ class Agent:
     def __init__(self, player: Player):
         self.player: Player = player
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         """
         This function is called when the agent should make a move.
         table.make_move() should be called, this makes the move and returns a reward.
@@ -32,7 +32,7 @@ class Agent:
         """
         pass
 
-    def game_end_callback(self, game_nr: int) -> bool:
+    async def game_end_callback(self, game_nr: int) -> bool:
         """
         Called when a game ends.
 

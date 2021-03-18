@@ -7,5 +7,5 @@ class SimpleAgent(Agent):
     def __init__(self):
         super().__init__(Player())
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         table.try_move(self, [sorted(self.player.hand)[0]])

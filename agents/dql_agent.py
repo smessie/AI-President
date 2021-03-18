@@ -25,6 +25,7 @@ class DQLAgent(Agent):
     In training_mode=False, the epsilon parameter is ignored and all moves are requested from the model.
     In this mode there is no learning, no data is written to the model.
     """
+
     def __init__(
             self,
             filepath: str = None,
@@ -81,7 +82,7 @@ class DQLAgent(Agent):
         if load_checkpoint:
             self.model.load(filepath)
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         """
         Agent makes a move by using Deep Q-Learning.
         """
@@ -132,7 +133,7 @@ class DQLAgent(Agent):
             reward_list = list(map(lambda agent: agent.player.player_id, agent_finish_order))
             # add reward to moves of last round.
             for agent in table.game.temp_memory:
-                total_living_reward: float =\
+                total_living_reward: float = \
                     len(table.game.temp_memory[agent]) * self.living_reward + self.living_reward
                 for move in table.game.temp_memory[agent]:
                     new_move: Any = list(move)
@@ -156,7 +157,7 @@ class DQLAgent(Agent):
 
         self.rounds_positions[agent_finish_order.index(self)] += 1
 
-    def game_end_callback(self, game_nr: int) -> bool:
+    async def game_end_callback(self, game_nr: int) -> bool:
         if self.training_mode:
             self.model.save(self.filepath)
 

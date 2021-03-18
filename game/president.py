@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from itertools import chain
 from typing import TYPE_CHECKING, Dict, Iterator, List, Optional, Tuple, Union
 
@@ -37,7 +38,7 @@ class President:
             self.temp_memory[agent] = []
         self.verbose = verbose
 
-    def play(self, games: int, rounds: int, start_at_game: int = 0) -> None:
+    async def play(self, games: int, rounds: int, start_at_game: int = 0, sleep_in_between=False) -> None:
         """
         Start the game. Play a certain amount of games each consisting of a certain amount of rounds.
         """
@@ -61,8 +62,13 @@ class President:
 
                 # Play the round
                 for agent in self._get_play_order():
-                    agent.make_move(self.table)
+                    if sleep_in_between:
+                        await asyncio.sleep(1)
 
+                    await agent.make_move(self.table)
+
+                    if sleep_in_between:
+                        await asyncio.sleep(1)
                     # If the player finished this round award it by giving it its position.
                     if len(agent.player.hand) == 0:
                         self.agent_finish_order.append(agent)
@@ -76,9 +82,12 @@ class President:
 
                 self.reset_temp_memory()
 
+                if sleep_in_between:
+                    await asyncio.sleep(1)
+
             triggered_early_stopping = False
             for agent in self.agents:
-                triggered_early_stopping = agent.game_end_callback(g) or triggered_early_stopping
+                triggered_early_stopping = await agent.game_end_callback(g) or triggered_early_stopping
             if triggered_early_stopping:
                 break
 

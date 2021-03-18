@@ -15,7 +15,7 @@ class BasicAgent(Agent):
     def __init__(self, player_name: str = None):
         super().__init__(Player(player_name if player_name is not None else 'BasicAgent'))
 
-    def make_move(self, table: Table) -> None:
+    async def make_move(self, table: Table) -> None:
         """
         Agent makes a move based on the fact that the hand played has the lowest possible value.
         """

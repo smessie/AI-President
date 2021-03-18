@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 
-import tensorflow as tf
-
 from agents.basic_agent import BasicAgent
-from agents.console_agent import ConsoleAgent
 from agents.dql_agent import DQLAgent
 from agents.random_agent import RandomAgent
 from game.president import President
@@ -27,8 +24,8 @@ if __name__ == "__main__":
         ),
         *(RandomAgent() for _ in range(1)),
         *(BasicAgent() for _ in range(2)),
-        #ConsoleAgent()
+        # ConsoleAgent()
     ])
 
     # Start the game
-    game.play(250, 20)
+    await game.play(250, 20)
