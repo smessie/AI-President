@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import asyncio
 
 from agents.basic_agent import BasicAgent
 from agents.dql_agent import DQLAgent
@@ -27,4 +28,4 @@ if __name__ == "__main__":
     ])
 
     # Start the game
-    await game.play(10, 20)
+    asyncio.run(game.play(10, 20))

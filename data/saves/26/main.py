@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import asyncio
 
 from agents.dql_agent import DQLAgent
 from agents.random_agent import RandomAgent
@@ -25,4 +26,4 @@ if __name__ == "__main__":
     ])
 
     # Start the game
-    await game.play(250, 20)
+    asyncio.run(game.play(250, 20))

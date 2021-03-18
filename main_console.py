@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import asyncio
 
 from agents.basic_agent import BasicAgent
 from agents.console_agent import ConsoleAgent
@@ -29,4 +30,4 @@ if __name__ == "__main__":
     ])
 
     # Start the game
-    await game.play(250, 20)
+    asyncio.run(game.play(250, 20))
