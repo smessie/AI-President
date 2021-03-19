@@ -24,6 +24,7 @@ def get_played_value(cards: List[Card]) -> Optional[int]:
 def match_move(input_move: str, possible_moves: List[List[Card]]) -> Optional[List[Card]]:
     if input_move == "0" and [] in possible_moves:
         return []
+    input_move = input_move.upper()
     if re.match('^[02-9XJQKA]+$', input_move) is None:
         return None
     cards = list(input_move)

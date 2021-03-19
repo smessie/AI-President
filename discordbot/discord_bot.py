@@ -100,9 +100,9 @@ class DiscordBot(discord.Client):
                 # Wait
                 await asyncio.sleep(1)
             if self.input_message[channel] is not None:
-                if self.input_message[channel].startswith('y'):
+                if self.input_message[channel].lower().startswith('y'):
                     bool_value = True
-                elif self.input_message[channel].startswith('n'):
+                elif self.input_message[channel].lower().startswith('n'):
                     bool_value = False
         self.waiting_for_input.remove(channel)
         del self.input_message[channel]
@@ -168,7 +168,7 @@ class DiscordBot(discord.Client):
             await asyncio.sleep(1)
 
             # Start the game
-            await game.play(1, 1, 0, sleep_in_between=True)
+            await game.play(10, 1, 0, sleep_in_between=True)
 
             await asyncio.sleep(1)
 
