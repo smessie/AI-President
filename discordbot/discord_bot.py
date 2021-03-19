@@ -185,3 +185,4 @@ class DiscordBot(discord.Client):
             # Clean up the game channels
             for channel in self.game_channels:
                 await channel.delete()
+            self.game_channels = []
