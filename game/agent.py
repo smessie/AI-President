@@ -51,3 +51,9 @@ class Agent:
         Called when trick is ended and new one begins.
         """
         pass
+
+    def cards_divided_callback(self):
+        """
+        Called when the cards are divided.
+        """
+        pass

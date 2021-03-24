@@ -21,16 +21,9 @@ class DiscordAgent(Agent):
     async def make_move(self, table: Table) -> None:
         self.print_whitespace()
 
-        to_print = ''
         possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
 
-        to_print += 'Your cards:\n'
-        move_string = print_cards_string(sorted(self.player.hand, key=lambda x: x.value))
-        if len(to_print) + len(move_string) > 1950:
-            self.discord_bot.print(to_print, self.channel)
-            to_print = ''
-        to_print += move_string
-        self.discord_bot.print(to_print, self.channel)
+        self.print_cards('Your cards:\n')
         await asyncio.sleep(1)
 
         move = match_move(await self.discord_bot.read_string_input('Enter move to take: ', self.channel),
@@ -71,3 +64,15 @@ class DiscordAgent(Agent):
 
     def print_whitespace(self):
         self.discord_bot.print('- \n' + ('-' * 40) + '\n- \n', self.channel)
+
+    def cards_divided_callback(self):
+        self.print_cards('New game started! Your cards:\n')
+
+    def print_cards(self, message):
+        to_print = message
+        move_string = print_cards_string(sorted(self.player.hand, key=lambda x: x.value))
+        if len(to_print) + len(move_string) > 1950:
+            self.discord_bot.print(to_print, self.channel)
+            to_print = ''
+        to_print += move_string
+        self.discord_bot.print(to_print, self.channel)

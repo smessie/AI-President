@@ -211,6 +211,7 @@ class President:
         """
         for i, hand in enumerate(self.table.divide(len(self.agents))):
             self.agents[i].player.hand = hand
+            self.agents[i].cards_divided_callback()
         self.table.reset()
 
     def _exchange_cards(self) -> None:
