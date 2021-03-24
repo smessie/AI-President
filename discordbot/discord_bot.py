@@ -82,7 +82,7 @@ class DiscordBot(discord.Client):
                 await asyncio.sleep(1)
             if self.input_message[channel] is not None:
                 try:
-                    move = int(self.input_message)
+                    move = int(self.input_message[channel])
                 except ValueError:
                     del self.input_message[channel]
         self.waiting_for_input.remove(channel)
@@ -102,8 +102,13 @@ class DiscordBot(discord.Client):
             if self.input_message[channel] is not None:
                 if self.input_message[channel].lower().startswith('y'):
                     bool_value = True
+                    self.print_queue.append((channel, "Alright :)"))
                 elif self.input_message[channel].lower().startswith('n'):
                     bool_value = False
+                    self.print_queue.append((channel, "Alright :("))
+                else:
+                    del self.input_message[channel]
+                    self.print_queue.append((channel, message))
         self.waiting_for_input.remove(channel)
         del self.input_message[channel]
         return bool_value
