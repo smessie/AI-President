@@ -173,7 +173,7 @@ class DiscordBot(discord.Client):
             await asyncio.sleep(1)
 
             # Start the game
-            await game.play(10, 1, 0, sleep_in_between=True)
+            await game.play(1, 10, 0, sleep_in_between=True)
 
             await asyncio.sleep(1)
 

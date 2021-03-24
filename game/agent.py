@@ -26,6 +26,13 @@ class Agent:
         """
         return sorted(table.deck.card_stack, reverse=True)
 
+    def get_card_for_scum(self) -> Card:
+        """
+        Function used by President to exchange cards at the beginning of a round. Card to give to the scum should be
+        returned.
+        """
+        return sorted(self.player.hand)[0]
+
     def round_end_callback(self, agent_finish_order: List[Agent], table: Table):
         """
         Called when a round ends.
@@ -55,5 +62,11 @@ class Agent:
     def cards_divided_callback(self):
         """
         Called when the cards are divided.
+        """
+        pass
+
+    def cards_exchanged_callback(self):
+        """
+        Called when the cards are exchanged.
         """
         pass

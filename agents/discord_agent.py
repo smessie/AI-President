@@ -76,3 +76,41 @@ class DiscordAgent(Agent):
             to_print = ''
         to_print += move_string
         self.discord_bot.print(to_print, self.channel)
+
+    def get_preferred_card_order(self, table: Table) -> List[Card]:
+        self.print_whitespace()
+        self.discord_bot.print('You are President! Give the cards in the order in which you would prefer to get them '
+                               'from the scum. If you would prefer to get a 2 and alternatively an ace, fill in 2A and '
+                               'so on, finishing with the card you would least like to have. Cards you do not mention '
+                               'are added to the back of the row.', self.channel)
+        card_order: str = await self.discord_bot.read_string_input('Enter cards: ', self.channel)
+        possible_cards: List[Card] = sorted(table.deck.card_stack, reverse=True)
+        preferred_cards = []
+        for card in list(card_order.upper()):
+            matching_card = None
+            i = 0
+            while matching_card is None and i < len(possible_cards):
+                if possible_cards[i].get_char_value() == card:
+                    matching_card = possible_cards[i]
+                else:
+                    i += 1
+            if matching_card:
+                preferred_cards.append(matching_card)
+                possible_cards.remove(matching_card)
+        preferred_cards.extend(possible_cards)
+        return preferred_cards
+
+    def get_card_for_scum(self) -> Card:
+        card = None
+        while card is None:
+            input_card: str = await self.discord_bot.read_string_input('Enter card to give to the scum: ', self.channel)
+            cards = match_move(input_card, [self.player.hand])
+            if cards and len(cards) == 1:
+                card = cards[0]
+            else:
+                self.discord_bot.print('Card is invalid! Try again.', self.channel)
+        return card
+
+    def cards_exchanged_callback(self):
+        self.print_whitespace()
+        self.print_cards('The cards between the President and scum have been exchanged. These are your new cards:')

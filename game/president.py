@@ -85,11 +85,11 @@ class President:
                 if sleep_in_between:
                     await asyncio.sleep(1)
 
-            triggered_early_stopping = False
-            for agent in self.agents:
-                triggered_early_stopping = await agent.game_end_callback(g) or triggered_early_stopping
-            if triggered_early_stopping:
-                break
+                triggered_early_stopping = False
+                for agent in self.agents:
+                    triggered_early_stopping = triggered_early_stopping or await agent.game_end_callback(g)
+                if triggered_early_stopping:
+                    break
 
         progress.close()
 
@@ -230,9 +230,11 @@ class President:
         last.player.hand.remove(exchange_card)
 
         # Hand lowest card from winner to loser
-        exchange_card = sorted(first.player.hand)[0]
+        exchange_card = first.get_card_for_scum()
         first.player.hand.remove(exchange_card)
         last.player.hand.append(exchange_card)
+        first.cards_exchanged_callback()
+        last.cards_exchanged_callback()
 
     def _get_play_order(self) -> Iterator[Agent]:
         """
