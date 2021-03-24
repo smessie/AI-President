@@ -57,7 +57,7 @@ class President:
 
                 # If this is not the first round exchange cards
                 if r != 0:
-                    self._exchange_cards()
+                    await self._exchange_cards()
                 self.agent_finish_order = []
 
                 # Play the round
@@ -214,11 +214,11 @@ class President:
             self.agents[i].cards_divided_callback()
         self.table.reset()
 
-    def _exchange_cards(self) -> None:
+    async def _exchange_cards(self) -> None:
         # For now only the first and last player trade cards as this should not directly affect the learning.
         first: Agent = self.agent_finish_order[0]
         last: Agent = self.agent_finish_order[-1]
-        preferred_cards: List[Card] = first.get_preferred_card_order(self.table)
+        preferred_cards: List[Card] = await first.get_preferred_card_order(self.table)
 
         # Hand best card from loser to winner
         card_index = 0
@@ -230,7 +230,7 @@ class President:
         last.player.hand.remove(exchange_card)
 
         # Hand lowest card from winner to loser
-        exchange_card = first.get_card_for_scum()
+        exchange_card = await first.get_card_for_scum()
         first.player.hand.remove(exchange_card)
         last.player.hand.append(exchange_card)
         first.cards_exchanged_callback()

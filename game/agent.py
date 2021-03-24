@@ -20,13 +20,13 @@ class Agent:
         """
         pass
 
-    def get_preferred_card_order(self, table: Table) -> List[Card]:
+    async def get_preferred_card_order(self, table: Table) -> List[Card]:
         """
         Function used by President to exchange cards at the beginning of a round. Most wanted card should be in front.
         """
         return sorted(table.deck.card_stack, reverse=True)
 
-    def get_card_for_scum(self) -> Card:
+    async def get_card_for_scum(self) -> Card:
         """
         Function used by President to exchange cards at the beginning of a round. Card to give to the scum should be
         returned.

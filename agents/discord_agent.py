@@ -77,7 +77,7 @@ class DiscordAgent(Agent):
         to_print += move_string
         self.discord_bot.print(to_print, self.channel)
 
-    def get_preferred_card_order(self, table: Table) -> List[Card]:
+    async def get_preferred_card_order(self, table: Table) -> List[Card]:
         self.print_whitespace()
         self.discord_bot.print('You are President! Give the cards in the order in which you would prefer to get them '
                                'from the scum. If you would prefer to get a 2 and alternatively an ace, fill in 2A and '
@@ -100,7 +100,7 @@ class DiscordAgent(Agent):
         preferred_cards.extend(possible_cards)
         return preferred_cards
 
-    def get_card_for_scum(self) -> Card:
+    async def get_card_for_scum(self) -> Card:
         card = None
         while card is None:
             input_card: str = await self.discord_bot.read_string_input('Enter card to give to the scum: ', self.channel)
