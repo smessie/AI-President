@@ -104,7 +104,7 @@ class DiscordAgent(Agent):
         card = None
         while card is None:
             input_card: str = await self.discord_bot.read_string_input('Enter card to give to the scum: ', self.channel)
-            cards = match_move(input_card, [self.player.hand])
+            cards = match_move(input_card, [[card] for card in self.player.hand])
             if cards and len(cards) == 1:
                 card = cards[0]
             else:
