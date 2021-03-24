@@ -20,6 +20,7 @@ class DiscordBot(discord.Client):
         self.print_queue = []
         self.game_channels = []
         self.starting_members = []
+        self.game_running = False
 
     @client.event
     async def on_ready(self):
@@ -39,13 +40,16 @@ class DiscordBot(discord.Client):
                 self.game_channel = channel
                 await message.channel.send('Game channel set!')
             else:
-                await channel.send('Starting a new game...')
-                mentions = message.mentions
-                if not mentions:
-                    await channel.send('Mention all players including yourself for which you want to start a game.')
-                    return
+                if self.game_running:
+                    await channel.send('A game is already in progress. Please wait until it is finished.')
+                else:
+                    await channel.send('Starting a new game...')
+                    mentions = message.mentions
+                    if not mentions:
+                        await channel.send('Mention all players including yourself for which you want to start a game.')
+                        return
 
-                self.starting_members = mentions
+                    self.starting_members = mentions
             return
 
         if channel not in self.game_channels:
@@ -133,6 +137,9 @@ class DiscordBot(discord.Client):
             while not self.starting_members:
                 # Wait
                 await asyncio.sleep(1)
+
+            self.game_running = True
+
             guild = self.game_channel.guild
             agents = []
             for member in self.starting_members:
@@ -191,3 +198,4 @@ class DiscordBot(discord.Client):
             for channel in self.game_channels:
                 await channel.delete()
             self.game_channels = []
+            self.game_running = False
