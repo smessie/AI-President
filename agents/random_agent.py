@@ -22,7 +22,7 @@ class RandomAgent(Agent):
         possible_moves: List[List[Card]] = self.player.get_all_possible_moves(table, self)
         table.try_move(self, random.choice(possible_moves))
 
-    def get_preferred_card_order(self, table: Table) -> List[Card]:
+    async def get_preferred_card_order(self, table: Table) -> List[Card]:
         """
         Returns the preferred cards to exchange in the beginning of a round in random order.
         """

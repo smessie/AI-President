@@ -118,7 +118,7 @@ class DQLAgent(Agent):
         else:
             table.try_move(self, choice(self.player.get_all_possible_moves(table, self)))
 
-    def get_preferred_card_order(self, table: Table) -> List[Card]:
+    async def get_preferred_card_order(self, table: Table) -> List[Card]:
         """
         Returns the preferred cards to exchange in the beginning of a round in descending value order.
         """
