@@ -87,16 +87,14 @@ class DiscordAgent(Agent):
         possible_cards: List[Card] = sorted(table.deck.card_stack, reverse=True)
         preferred_cards = []
         for card in list(card_order.upper()):
-            matching_card = None
             i = 0
-            while matching_card is None and i < len(possible_cards):
+            while i < len(possible_cards):
                 if possible_cards[i].get_char_value() == card:
                     matching_card = possible_cards[i]
+                    preferred_cards.append(matching_card)
+                    possible_cards.remove(matching_card)
                 else:
                     i += 1
-            if matching_card:
-                preferred_cards.append(matching_card)
-                possible_cards.remove(matching_card)
         preferred_cards.extend(possible_cards)
         return preferred_cards
 

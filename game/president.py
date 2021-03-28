@@ -225,7 +225,7 @@ class President:
         while preferred_cards[card_index] not in last.player.hand:
             card_index += 1
 
-        exchange_card: Card = last.player.hand[card_index]
+        exchange_card: Card = preferred_cards[card_index]
         first.player.hand.append(exchange_card)
         last.player.hand.remove(exchange_card)
 
