@@ -166,9 +166,9 @@ class DiscordBot(discord.Client):
                     lower_eps_over_time=0,
                     track_training_loss=True,
                     living_reward=-0.1,
-                    training_mode=False,
-                    filepath="data/saves/10/training-0/cp.ckpt",
-                    csv_filepath="data/saves/10/results/wins-benchmark.csv"
+                    training_mode=True,
+                    filepath="data/discordbot/training-0/cp.ckpt",
+                    csv_filepath="data/discordbot/results/wins-benchmark.csv"
                 ))
             if len(agents) < 4:
                 agents.append(BetterAgent('Betty'))

@@ -148,6 +148,7 @@ class DQLAgent(Agent):
                     total_living_reward -= self.living_reward
 
             self.triggered_early_stopping = self.model.train_model(self.replay_buffer) or self.triggered_early_stopping
+            self.model.save(self.filepath)
 
         if self.eps_over_time > 0:
             self.eps_over_time -= 1
