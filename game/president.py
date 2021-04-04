@@ -30,6 +30,7 @@ class President:
         self.agent_finish_order: List[Agent] = []
         self.agent_iterator: CustomIterator = CustomIterator(agents)
         self.table = Table(self)
+        self.scum = None
 
         # Dict[player/agent,
         # input vector (= cards in hand, previous move, all played cards); calculated move; reward; next move]
@@ -90,6 +91,8 @@ class President:
                     triggered_early_stopping = triggered_early_stopping or await agent.game_end_callback(g)
                 if triggered_early_stopping:
                     break
+
+                self.scum = self.agent_finish_order[-1]
 
         progress.close()
 
@@ -274,6 +277,12 @@ class President:
                 # We found the player, but the loop will call next, so we have to call previous to neutralize this.
                 self.agent_iterator.previous()
                 continue
+
+            # If a new round is started, the scum of the previous round should start.
+            if self.scum:
+                while self.agent_iterator.get() != self.scum:
+                    self.agent_iterator.next()
+                self.scum = None
 
             yield self.agent_iterator.get()
         # The unfinished player comes last, add it to the last_played lis
