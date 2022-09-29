@@ -1,0 +1,10 @@
+.github/
+venv/
+.dockerignore
+.flake8
+.gitignore
+.isort.cfg
+Dockerfile
+LICENSE
+output_mapping.md
+README.md
