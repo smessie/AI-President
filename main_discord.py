@@ -12,3 +12,4 @@ if __name__ == "__main__":
     loop.create_task(discord_bot.run_game())
     thread = Thread(target=loop.run_forever, args=())
     thread.start()
+    thread.join()
