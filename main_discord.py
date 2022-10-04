@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import asyncio
+import sys
 from threading import Thread
 
 import discord
@@ -13,7 +14,11 @@ if __name__ == "__main__":
 
     discord_bot = DiscordBot()
     loop = asyncio.get_event_loop()
-    loop.create_task(discord_bot.start(input('Enter bot token: ')))
+    if len(sys.argv) > 1:
+        token = sys.args[1]
+    else:
+        token = input("Enter token: ")
+    loop.create_task(discord_bot.start(token))
     loop.create_task(discord_bot.print_task())
     loop.create_task(discord_bot.run_game())
     thread = Thread(target=loop.run_forever, args=())
