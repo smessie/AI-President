@@ -15,7 +15,7 @@ if __name__ == "__main__":
     discord_bot = DiscordBot()
     loop = asyncio.get_event_loop()
     if len(sys.argv) > 1:
-        token = sys.args[1]
+        token = sys.argv[1]
     else:
         token = input("Enter token: ")
     loop.create_task(discord_bot.start(token))
